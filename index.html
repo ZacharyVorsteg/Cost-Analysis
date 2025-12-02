@@ -94,6 +94,9 @@
         .metric-value.green{color:var(--green)}
         .metric-value.blue{color:var(--blue)}
         
+        .calc-formula{background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-top:6px;font-size:10px;color:var(--text2);font-family:'Courier New',monospace;text-align:center;line-height:1.5}
+        .calc-formula strong{color:var(--purple);font-weight:700}
+        
         .help-toggle{background:var(--purple);color:#fff;border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:18px;font-weight:700;transition:all 0.2s;box-shadow:0 2px 4px rgba(107,63,160,0.3)}
         .help-toggle:hover{background:#8B5FC0;transform:scale(1.05)}
         .help-toggle.active{background:var(--gold);color:#000}
@@ -248,6 +251,11 @@
                         <input type="number" id="staffrate" value="28" oninput="calc()">
                         <span class="hint">Loaded cost avg</span>
                     </div>
+                    <div class="input-box">
+                        <label>Provider Hourly Cost</label>
+                        <input type="number" id="provrate" value="200" oninput="calc()">
+                        <span class="hint">Opportunity cost/hr</span>
+                    </div>
                 </div>
                 
                 <div class="derived-row">
@@ -264,8 +272,8 @@
                         <div class="derived-stat-value" id="activePatients">0</div>
                     </div>
                     <div class="derived-stat">
-                        <div class="derived-stat-label">Provider Opp. Cost</div>
-                        <div class="derived-stat-value">$200/hr</div>
+                        <div class="derived-stat-label">Denial Cost/Claim</div>
+                        <div class="derived-stat-value" id="denialCostPer">$45</div>
                     </div>
                 </div>
             </div>
@@ -285,7 +293,7 @@
             </div>
             <div class="step-body">
                 <div class="info-box blue">
-                    <strong>📊 How This Works:</strong> Enter THEIR numbers (red = pain). Adjust ModMed targets (green = solution). Click <strong>?</strong> for Sandler questions that uncover each pain point!
+                    <strong>📊 How This Works:</strong> Enter THEIR numbers (red = pain). See the <strong>exact calculation</strong> under each cost/savings showing all variables. Adjust ModMed targets (green = solution). Click <strong>?</strong> for Sandler questions!
                 </div>
                 
                 <!-- CHARTING -->
@@ -304,6 +312,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label">Annual Cost</span>
                             <span class="metric-value red" id="chartingCost">$0</span>
+                            <div class="calc-formula" id="chartingFormula"></div>
                         </div>
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
@@ -313,6 +322,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--blue)">Savings</span>
                             <span class="metric-value blue" id="chartingSave">$0</span>
+                            <div class="calc-formula" id="chartingSaveFormula"></div>
                         </div>
                         <div>
                             <button class="help-toggle" onclick="toggleHelp('charting')">?</button>
@@ -350,6 +360,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label">Annual Cost</span>
                             <span class="metric-value red" id="noshowCost">$0</span>
+                            <div class="calc-formula" id="noshowFormula"></div>
                         </div>
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
@@ -359,6 +370,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--blue)">Savings</span>
                             <span class="metric-value blue" id="noshowSave">$0</span>
+                            <div class="calc-formula" id="noshowSaveFormula"></div>
                         </div>
                         <div>
                             <button class="help-toggle" onclick="toggleHelp('noshow')">?</button>
@@ -396,6 +408,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label">Annual Cost</span>
                             <span class="metric-value red" id="collCost">$0</span>
+                            <div class="calc-formula" id="collFormula"></div>
                         </div>
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
@@ -405,6 +418,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--blue)">Savings</span>
                             <span class="metric-value blue" id="collSave">$0</span>
+                            <div class="calc-formula" id="collSaveFormula"></div>
                         </div>
                         <div>
                             <button class="help-toggle" onclick="toggleHelp('coll')">?</button>
@@ -442,6 +456,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label">Annual Cost</span>
                             <span class="metric-value red" id="denialCost">$0</span>
+                            <div class="calc-formula" id="denialFormula"></div>
                         </div>
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
@@ -451,6 +466,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--blue)">Savings</span>
                             <span class="metric-value blue" id="denialSave">$0</span>
+                            <div class="calc-formula" id="denialSaveFormula"></div>
                         </div>
                         <div>
                             <button class="help-toggle" onclick="toggleHelp('denial')">?</button>
@@ -488,6 +504,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label">Annual Cost</span>
                             <span class="metric-value red" id="captureCost">$0</span>
+                            <div class="calc-formula" id="captureFormula"></div>
                         </div>
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
@@ -497,6 +514,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--blue)">Savings</span>
                             <span class="metric-value blue" id="captureSave">$0</span>
+                            <div class="calc-formula" id="captureSaveFormula"></div>
                         </div>
                         <div>
                             <button class="help-toggle" onclick="toggleHelp('capture')">?</button>
@@ -534,6 +552,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label">Annual Cost</span>
                             <span class="metric-value red" id="phoneCost">$0</span>
+                            <div class="calc-formula" id="phoneFormula"></div>
                         </div>
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
@@ -543,6 +562,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--blue)">Savings</span>
                             <span class="metric-value blue" id="phoneSave">$0</span>
+                            <div class="calc-formula" id="phoneSaveFormula"></div>
                         </div>
                         <div>
                             <button class="help-toggle" onclick="toggleHelp('phone')">?</button>
@@ -580,6 +600,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label">Annual Cost</span>
                             <span class="metric-value red" id="retCost">$0</span>
+                            <div class="calc-formula" id="retFormula"></div>
                         </div>
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
@@ -589,6 +610,7 @@
                         <div class="metric-col">
                             <span class="metric-col-label" style="color:var(--blue)">Savings</span>
                             <span class="metric-value blue" id="retSave">$0</span>
+                            <div class="calc-formula" id="retSaveFormula"></div>
                         </div>
                         <div>
                             <button class="help-toggle" onclick="toggleHelp('retention')">?</button>
@@ -866,12 +888,13 @@
         
         function calc(){
             const prov=getN('providers',2),staff=getN('staff',6),ppd=getN('ppd',18),rpv=getN('rpv',425);
-            const days=getN('workdays',240),staffRate=getN('staffrate',28),provRate=200;
+            const days=getN('workdays',240),staffRate=getN('staffrate',28),provRate=getN('provrate',200);
             const visits=prov*ppd*days,revenue=visits*rpv,patients=Math.round(visits/3.5);
             
             document.getElementById('annualVisits').textContent=visits.toLocaleString();
             document.getElementById('annualRevenue').textContent=fmt(revenue);
             document.getElementById('activePatients').textContent=patients.toLocaleString();
+            document.getElementById('denialCostPer').textContent='$45';
             
             let totalCost=0,totalSave=0;
             
@@ -881,6 +904,8 @@
             const chartSave=(chartCurr-chartTgt)*provRate*days*prov;
             document.getElementById('chartingCost').textContent=fmt(chartCost);
             document.getElementById('chartingSave').textContent=fmt(Math.max(0,chartSave));
+            document.getElementById('chartingFormula').innerHTML=`<strong>${chartCurr}</strong> hrs × <strong>$${provRate}</strong>/hr × <strong>${days}</strong> days × <strong>${prov}</strong> prov`;
+            document.getElementById('chartingSaveFormula').innerHTML=`(<strong>${chartCurr}</strong> - <strong>${chartTgt}</strong>) × <strong>$${provRate}</strong> × <strong>${days}</strong> × <strong>${prov}</strong>`;
             totalCost+=chartCost;totalSave+=Math.max(0,chartSave);
             
             // NO-SHOWS
@@ -889,6 +914,8 @@
             const nsSave=visits*(nsCurr-nsTgt)*rpv;
             document.getElementById('noshowCost').textContent=fmt(nsCost);
             document.getElementById('noshowSave').textContent=fmt(Math.max(0,nsSave));
+            document.getElementById('noshowFormula').innerHTML=`<strong>${visits.toLocaleString()}</strong> visits × <strong>${Math.round(nsCurr*100)}%</strong> × <strong>$${rpv}</strong>`;
+            document.getElementById('noshowSaveFormula').innerHTML=`<strong>${visits.toLocaleString()}</strong> × (<strong>${Math.round(nsCurr*100)}%</strong> - <strong>${Math.round(nsTgt*100)}%</strong>) × <strong>$${rpv}</strong>`;
             totalCost+=nsCost;totalSave+=Math.max(0,nsSave);
             
             // COLLECTIONS
@@ -897,6 +924,8 @@
             const collSave=revenue*(collTgt-collCurr);
             document.getElementById('collCost').textContent=fmt(collCost);
             document.getElementById('collSave').textContent=fmt(Math.max(0,collSave));
+            document.getElementById('collFormula').innerHTML=`<strong>${fmt(revenue)}</strong> revenue × <strong>${Math.round((1-collCurr)*100)}%</strong> uncollected`;
+            document.getElementById('collSaveFormula').innerHTML=`<strong>${fmt(revenue)}</strong> × (<strong>${Math.round(collTgt*100)}%</strong> - <strong>${Math.round(collCurr*100)}%</strong>)`;
             totalCost+=collCost;totalSave+=Math.max(0,collSave);
             
             // DENIALS
@@ -905,6 +934,8 @@
             const denSave=visits*(denCurr-denTgt)*denCostPer;
             document.getElementById('denialCost').textContent=fmt(denCost);
             document.getElementById('denialSave').textContent=fmt(Math.max(0,denSave));
+            document.getElementById('denialFormula').innerHTML=`<strong>${visits.toLocaleString()}</strong> visits × <strong>${Math.round(denCurr*100)}%</strong> × <strong>$${denCostPer}</strong>/denial`;
+            document.getElementById('denialSaveFormula').innerHTML=`<strong>${visits.toLocaleString()}</strong> × (<strong>${Math.round(denCurr*100)}%</strong> - <strong>${Math.round(denTgt*100)}%</strong>) × <strong>$${denCostPer}</strong>`;
             totalCost+=denCost;totalSave+=Math.max(0,denSave);
             
             // CAPTURE
@@ -913,6 +944,8 @@
             const capSave=revenue*(capTgt-capCurr);
             document.getElementById('captureCost').textContent=fmt(capCost);
             document.getElementById('captureSave').textContent=fmt(Math.max(0,capSave));
+            document.getElementById('captureFormula').innerHTML=`<strong>${fmt(revenue)}</strong> revenue × <strong>${Math.round((1-capCurr)*100)}%</strong> missed`;
+            document.getElementById('captureSaveFormula').innerHTML=`<strong>${fmt(revenue)}</strong> × (<strong>${Math.round(capTgt*100)}%</strong> - <strong>${Math.round(capCurr*100)}%</strong>)`;
             totalCost+=capCost;totalSave+=Math.max(0,capSave);
             
             // PHONE
@@ -921,6 +954,8 @@
             const phoneSave=((phoneCurr-phoneTgt)*phoneMin/60)*staffRate*days;
             document.getElementById('phoneCost').textContent=fmt(phoneCost);
             document.getElementById('phoneSave').textContent=fmt(Math.max(0,phoneSave));
+            document.getElementById('phoneFormula').innerHTML=`<strong>${phoneCurr}</strong> calls × <strong>${phoneMin}</strong>min × <strong>$${staffRate}</strong>/hr × <strong>${days}</strong> days`;
+            document.getElementById('phoneSaveFormula').innerHTML=`(<strong>${phoneCurr}</strong> - <strong>${phoneTgt}</strong>) calls × <strong>${phoneMin}</strong>min × <strong>$${staffRate}</strong>/hr × <strong>${days}</strong>`;
             totalCost+=phoneCost;totalSave+=Math.max(0,phoneSave);
             
             // RETENTION
@@ -929,6 +964,8 @@
             const retSave=patients*(retTgt-retCurr)*retVal;
             document.getElementById('retCost').textContent=fmt(retCost);
             document.getElementById('retSave').textContent=fmt(Math.max(0,retSave));
+            document.getElementById('retFormula').innerHTML=`<strong>${patients.toLocaleString()}</strong> pts × <strong>${Math.round((1-retCurr)*100)}%</strong> lost × <strong>$${retVal}</strong> LTV`;
+            document.getElementById('retSaveFormula').innerHTML=`<strong>${patients.toLocaleString()}</strong> × (<strong>${Math.round(retTgt*100)}%</strong> - <strong>${Math.round(retCurr*100)}%</strong>) × <strong>$${retVal}</strong>`;
             totalCost+=retCost;totalSave+=Math.max(0,retSave);
             
             // SUBTOTALS
@@ -988,6 +1025,7 @@
             setN('ppd',18);
             setN('workdays',240);
             setN('staffrate',28);
+            setN('provrate',200);
             calc();
         }
         
