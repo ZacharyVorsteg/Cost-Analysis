@@ -6,164 +6,111 @@
     <title>ModMed ROI Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root{--purple:#6B3FA0;--purple-dark:#5a3587;--purple-light:#8B5FC0;--gold:#F5B335;--bg:#fafafa;--card:#fff;--section:#f5f5f7;--text:#1a1a2e;--text2:#5a5a6e;--muted:#8a8a9a;--border:#e5e5ea;--red:#dc3545;--green:#198754;--radius:12px}
+        :root{--purple:#6B3FA0;--purple-light:#8B5FC0;--gold:#F5B335;--bg:#fafafa;--card:#fff;--section:#f5f5f7;--text:#1a1a2e;--text2:#5a5a6e;--muted:#8a8a9a;--border:#e5e5ea;--red:#dc3545;--green:#198754;--radius:12px}
         *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
-        .header{background:#fff;border-bottom:1px solid var(--border);padding:12px 20px;position:sticky;top:0;z-index:100}
-        .header-content{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-        .logo{display:flex;align-items:center;gap:10px}
-        .logo svg{width:36px;height:36px}
-        .logo-text{font-weight:600;color:var(--purple)}
-        .controls{display:flex;gap:8px;flex-wrap:wrap}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;font-size:14px}
+        .header{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px;position:sticky;top:0;z-index:100}
+        .header-content{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .logo{display:flex;align-items:center;gap:8px;font-weight:600;color:var(--purple)}
+        .logo svg{width:32px;height:32px}
         .tabs{display:flex;background:var(--section);border-radius:8px;padding:3px}
-        .tab{padding:8px 14px;border-radius:6px;font-size:13px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text2);transition:all .2s}
+        .tab{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text2);transition:all .2s}
         .tab.active{background:var(--purple);color:#fff}
-        .btn{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all .2s}
+        .controls{display:flex;gap:6px;flex-wrap:wrap}
+        .btn{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;border:none;cursor:pointer}
         .btn-primary{background:var(--purple);color:#fff}
         .btn-secondary{background:var(--section);color:var(--text2)}
         
-        /* View Tabs */
-        .view-tabs{display:flex;background:var(--purple);border-radius:8px;padding:3px}
-        .view-tab{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;border:none;cursor:pointer;background:transparent;color:rgba(255,255,255,.7);transition:all .2s}
-        .view-tab.active{background:#fff;color:var(--purple)}
+        .main{max-width:1200px;margin:0 auto;padding:20px}
         
-        /* Views */
-        .view{display:none}
-        .view.active{display:block}
+        /* Practice Setup */
+        .setup-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+        .setup-title{font-size:16px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .setup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+        .field{display:flex;flex-direction:column;gap:4px}
+        .field label{font-size:12px;font-weight:500;color:var(--text2)}
+        .field input,.field select{background:var(--section);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:14px;width:100%}
+        .field input:focus,.field select:focus{outline:none;border-color:var(--purple)}
+        .field .hint{font-size:11px;color:var(--muted)}
         
-        /* ===== CALCULATOR VIEW ===== */
-        .calc-main{max-width:1400px;margin:0 auto;padding:20px;display:grid;grid-template-columns:1fr 380px;gap:20px}
-        @media(max-width:1024px){.calc-main{grid-template-columns:1fr}.sidebar{order:-1}}
-        .card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:14px;overflow:hidden}
-        .card-header{padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-        .card-header:hover{background:var(--section)}
-        .card.expanded .card-header{border-bottom:1px solid var(--border)}
-        .card-title h3{font-size:14px;font-weight:600}
-        .card-title p{font-size:11px;color:var(--muted)}
-        .card-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-right:10px}
-        .card-value{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600}
-        .card-value.pain{color:var(--red)}
-        .chevron{width:18px;height:18px;color:var(--muted);transition:transform .2s}
-        .card.expanded .chevron{transform:rotate(180deg)}
-        .card-content{max-height:0;overflow:hidden;transition:max-height .3s}
-        .card.expanded .card-content{max-height:2000px}
-        .card-body{padding:16px}
+        /* Cost Breakdown */
+        .breakdown-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px}
+        .breakdown-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+        .breakdown-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+        .breakdown-header h3{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+        .breakdown-header .total{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--red)}
+        .breakdown-body{padding:12px 16px}
         
-        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
-        .form-group label{font-size:12px;font-weight:500;color:var(--text2);display:block;margin-bottom:4px}
-        .form-input{background:var(--section);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;width:100%}
-        .form-input:focus{outline:none;border-color:var(--purple)}
-        .form-hint{font-size:10px;color:var(--muted)}
+        .cost-row{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--section)}
+        .cost-row:last-child{border-bottom:none}
+        .cost-label{font-size:13px}
+        .cost-label small{display:block;font-size:11px;color:var(--muted)}
+        .cost-input{width:70px;background:var(--section);border:1px solid var(--border);border-radius:4px;padding:6px 8px;font-size:12px;text-align:right;font-family:'JetBrains Mono',monospace}
+        .cost-input:focus{outline:none;border-color:var(--purple)}
+        .cost-value{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--red);text-align:right;min-width:80px}
+        .cost-calc{font-size:10px;color:var(--muted);grid-column:1/-1;padding-top:4px;font-family:'JetBrains Mono',monospace}
         
-        .pain-item{padding:12px;margin-bottom:10px;background:var(--section);border-radius:8px}
-        .pain-header{display:flex;justify-content:space-between;margin-bottom:8px}
-        .pain-info h4{font-size:13px;font-weight:500}
-        .pain-info p{font-size:11px;color:var(--muted)}
-        .pain-cost{text-align:right}
-        .pain-cost-label{font-size:10px;color:var(--muted)}
-        .pain-cost-value{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--red)}
-        .pain-inputs{display:flex;gap:10px;flex-wrap:wrap}
-        .pain-field label{font-size:10px;color:var(--muted);display:block;margin-bottom:2px}
-        .pain-field input,.pain-field select{width:80px;background:#fff;border:1px solid var(--border);border-radius:5px;padding:6px 8px;font-size:12px}
+        /* Summary Panel */
+        .summary-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+        .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+        .summary-item{text-align:center;padding:16px;background:var(--section);border-radius:8px}
+        .summary-item.pain{background:linear-gradient(135deg,#fee2e2,#fecaca)}
+        .summary-item.roi{background:linear-gradient(135deg,#e0e7ff,#c7d2fe)}
+        .summary-item.savings{background:linear-gradient(135deg,#dcfce7,#bbf7d0)}
+        .summary-label{font-size:12px;color:var(--text2);margin-bottom:4px}
+        .summary-value{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700}
+        .summary-item.pain .summary-value{color:var(--red)}
+        .summary-item.roi .summary-value{color:var(--purple)}
+        .summary-item.savings .summary-value{color:var(--green)}
+        .summary-sub{font-size:11px;color:var(--muted);margin-top:4px}
         
-        /* Sidebar */
-        .sidebar{position:sticky;top:70px;height:fit-content}
-        .pain-box{background:linear-gradient(135deg,var(--red),#b02a37);color:#fff;border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:14px}
-        .pain-box-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;opacity:.9}
-        .pain-box-value{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;margin:8px 0}
-        .pain-breakdown{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.2);text-align:left}
-        .pain-breakdown-item{display:flex;justify-content:space-between;padding:6px 0;font-size:12px}
-        .pain-3year{margin-top:14px;padding:12px;background:rgba(0,0,0,.2);border-radius:8px}
-        .pain-3year-label{font-size:11px;opacity:.9}
-        .pain-3year-value{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700}
+        /* Investment Section */
+        .invest-section{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border-radius:var(--radius);padding:20px;margin-bottom:20px}
+        .invest-title{font-size:14px;font-weight:600;margin-bottom:16px;opacity:.9}
+        .invest-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+        .invest-field label{font-size:11px;opacity:.8;display:block;margin-bottom:4px}
+        .invest-field input{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:8px 10px;font-size:13px;color:#fff;width:100%}
+        .invest-field input::placeholder{color:rgba(255,255,255,.5)}
+        .invest-totals{display:flex;justify-content:space-around;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.2)}
+        .invest-total{text-align:center}
+        .invest-total-label{font-size:11px;opacity:.8}
+        .invest-total-value{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700}
         
-        .roi-box{background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:14px}
-        .roi-value{font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:700}
-        .roi-payback{font-size:14px;opacity:.9;margin-top:6px}
-        
-        .savings-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;overflow:hidden}
-        .savings-header{padding:12px 16px;border-bottom:1px solid var(--border);background:#f0fff4}
-        .savings-header h3{font-size:13px;font-weight:600;color:var(--green)}
-        .savings-body{padding:14px 16px}
-        .savings-item{display:flex;justify-content:space-between;padding:6px 0;font-size:12px}
-        .savings-item span:last-child{font-family:'JetBrains Mono',monospace;font-weight:500;color:var(--green)}
-        
-        .net-card{background:#f0fff4;border:1px solid rgba(25,135,84,.2);border-radius:var(--radius);padding:16px}
-        .net-item{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
-        .net-item span:last-child{font-family:'JetBrains Mono',monospace;font-weight:600}
-        .net-item.highlight{font-size:16px;padding:10px 0}
-        .net-item.highlight span:last-child{color:var(--green)}
-        
-        /* ===== COMPARISON VIEW ===== */
-        .compare-main{max-width:900px;margin:0 auto;padding:20px}
-        
-        .compare-header{text-align:center;padding:30px 20px;background:linear-gradient(135deg,var(--purple),var(--purple-light));color:#fff;border-radius:var(--radius);margin-bottom:24px}
-        .compare-header h1{font-size:24px;margin-bottom:8px}
-        .compare-header p{opacity:.9;font-size:14px;max-width:500px;margin:0 auto}
-        .compare-practice{margin-top:16px;font-size:18px;font-weight:600;background:rgba(255,255,255,.2);display:inline-block;padding:8px 20px;border-radius:8px}
-        
-        .quick-inputs{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:24px}
-        .quick-inputs h3{font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-        .quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
-        
-        /* Comparison Table */
-        .compare-table{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
-        .compare-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border)}
-        .compare-row:last-child{border-bottom:none}
-        .compare-row.header{background:var(--section);font-weight:600;font-size:13px}
-        .compare-cell{padding:14px 16px;font-size:13px}
-        .compare-cell:first-child{background:var(--section);font-weight:500}
-        .compare-cell.current{color:var(--red)}
-        .compare-cell.modmed{color:var(--green);font-weight:600}
-        .compare-cell.metric{font-family:'JetBrains Mono',monospace}
-        
-        @media(max-width:600px){
-            .compare-row{grid-template-columns:1fr}
-            .compare-row.header{display:none}
-            .compare-cell{padding:10px 14px;display:flex;justify-content:space-between}
-            .compare-cell::before{content:attr(data-label);font-weight:500;color:var(--text2)}
-            .compare-cell:first-child{background:var(--purple);color:#fff}
-            .compare-cell:first-child::before{display:none}
-        }
-        
-        /* Value Props */
-        .value-props{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
-        .value-prop{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center}
-        .value-prop-icon{font-size:32px;margin-bottom:10px}
-        .value-prop h4{font-size:14px;font-weight:600;margin-bottom:6px}
-        .value-prop p{font-size:12px;color:var(--text2)}
-        .value-prop .big-number{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--purple);margin:10px 0}
+        /* Assumptions */
+        .assumptions{background:#fffbeb;border:1px solid #fcd34d;border-radius:var(--radius);padding:16px;margin-bottom:20px}
+        .assumptions h4{font-size:13px;font-weight:600;color:#92400e;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+        .assumption-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+        .assumption-item{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:8px 10px;background:rgba(255,255,255,.7);border-radius:6px}
+        .assumption-item input{width:55px;background:#fff;border:1px solid #fcd34d;border-radius:4px;padding:4px 6px;font-size:12px;text-align:right}
         
         /* Talk Track */
-        .talk-track{background:linear-gradient(135deg,var(--gold),#e5a325);border-radius:var(--radius);padding:24px;margin-bottom:24px}
-        .talk-track h3{font-size:14px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-        .talk-step{background:rgba(255,255,255,.9);border-radius:8px;padding:14px 16px;margin-bottom:10px}
+        .talk-track{background:var(--gold);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+        .talk-track h3{font-size:14px;font-weight:700;margin-bottom:16px}
+        .talk-step{background:rgba(255,255,255,.95);border-radius:8px;padding:14px;margin-bottom:10px}
         .talk-step:last-child{margin-bottom:0}
-        .talk-step-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--purple);color:#fff;border-radius:50%;font-size:12px;font-weight:700;margin-right:10px}
+        .talk-step-num{display:inline-flex;width:22px;height:22px;align-items:center;justify-content:center;background:var(--purple);color:#fff;border-radius:50%;font-size:11px;font-weight:700;margin-right:8px}
         .talk-step strong{font-size:13px}
-        .talk-step p{font-size:12px;color:var(--text2);margin-top:6px;margin-left:34px}
-        .talk-step .script{background:var(--section);padding:10px 12px;border-radius:6px;font-size:12px;font-style:italic;margin-top:8px;margin-left:34px;border-left:3px solid var(--purple)}
+        .talk-step p{font-size:12px;color:var(--text2);margin:6px 0 0 30px}
+        .script{background:var(--section);padding:10px;border-radius:6px;font-size:12px;margin:8px 0 0 30px;border-left:3px solid var(--purple);font-style:italic}
+        .script strong{color:var(--purple);font-style:normal}
         
         /* Bottom Line */
-        .bottom-line{background:var(--card);border:2px solid var(--green);border-radius:var(--radius);padding:24px;text-align:center}
+        .bottom-line{background:var(--card);border:2px solid var(--green);border-radius:var(--radius);padding:20px;text-align:center}
         .bottom-line h3{font-size:14px;color:var(--green);margin-bottom:16px}
-        .bottom-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-        .bottom-stat-label{font-size:11px;color:var(--text2);margin-bottom:4px}
-        .bottom-stat-value{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700}
-        .bottom-stat-value.red{color:var(--red)}
-        .bottom-stat-value.green{color:var(--green)}
-        .bottom-stat-value.purple{color:var(--purple)}
+        .bottom-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+        .bottom-stat{padding:12px}
+        .bottom-label{font-size:11px;color:var(--text2)}
+        .bottom-value{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;margin-top:4px}
+        .bottom-value.red{color:var(--red)}
+        .bottom-value.purple{color:var(--purple)}
+        .bottom-value.green{color:var(--green)}
         
-        @media(max-width:600px){.bottom-stats{grid-template-columns:1fr}}
-        
-        /* Utility */
-        .icon-purple{background:rgba(107,63,160,.1)}
-        .icon-gold{background:rgba(245,179,53,.15)}
-        .icon-red{background:rgba(220,53,69,.1)}
-        .icon-green{background:rgba(25,135,84,.1)}
-        .mt-2{margin-top:16px}
-        
-        @media print{.header,.btn,.controls{display:none}.calc-main,.compare-main{padding:10px}}
+        @media(max-width:600px){
+            .breakdown-grid{grid-template-columns:1fr}
+            .cost-row{grid-template-columns:1fr;gap:4px}
+            .cost-value{text-align:left}
+            .bottom-grid{grid-template-columns:1fr}
+        }
     </style>
 </head>
 <body>
@@ -171,536 +118,552 @@
         <div class="header-content">
             <div class="logo">
                 <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#8C8C8C"/><circle cx="50" cy="50" r="44" fill="#F5B335"/><ellipse cx="50" cy="75" rx="44" ry="25" fill="#6B3FA0"/><path d="M15 50 L30 50 L38 25 L50 70 L62 30 L70 50 L85 50" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span class="logo-text">ModMed ROI</span>
+                ModMed ROI Calculator
             </div>
-            <div class="view-tabs">
-                <button class="view-tab active" onclick="switchView('calc')">📊 Calculator</button>
-                <button class="view-tab" onclick="switchView('compare')">⚡ Value Comparison</button>
+            <div class="tabs">
+                <button class="tab active" onclick="switchSpecialty('plastic')" id="tab-plastic">Plastic Surgery</button>
+                <button class="tab" onclick="switchSpecialty('allergy')" id="tab-allergy">Allergy</button>
             </div>
             <div class="controls">
-                <div class="tabs">
-                    <button class="tab active" onclick="switchSpecialty('plastic')" id="tab-plastic">Plastic</button>
-                    <button class="tab" onclick="switchSpecialty('allergy')" id="tab-allergy">Allergy</button>
-                </div>
                 <button class="btn btn-secondary" onclick="resetAll()">↺ Reset</button>
-                <button class="btn btn-primary" onclick="copySummary()">📋 Copy</button>
+                <button class="btn btn-primary" onclick="copySummary()">📋 Copy Summary</button>
             </div>
         </div>
     </header>
 
-    <!-- CALCULATOR VIEW -->
-    <div id="view-calc" class="view active">
-        <main class="calc-main">
-            <div class="calc-column">
-                <!-- Practice Profile -->
-                <div class="card expanded" id="card-profile">
-                    <div class="card-header" onclick="toggleCard('profile')">
-                        <div style="display:flex;align-items:center"><div class="card-icon icon-purple">🏥</div><div class="card-title"><h3>Practice Profile</h3><p>Basic info & current EHR</p></div></div>
-                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-                    </div>
-                    <div class="card-content"><div class="card-body">
-                        <div class="form-grid">
-                            <div class="form-group"><label>Practice Name</label><input type="text" id="practiceName" class="form-input" placeholder="Enter name..."></div>
-                            <div class="form-group"><label>Current EHR</label><select id="currentEHR" class="form-input" onchange="calculate()"><option value="paper">Paper/Manual (1.5x)</option><option value="legacy">Legacy EHR (1.3x)</option><option value="generic">Generic EHR (1.15x)</option><option value="competitor">Competitor (0.95x)</option></select></div>
-                            <div class="form-group"><label>Providers</label><input type="number" id="providerCount" class="form-input" value="2" oninput="calculate()"></div>
-                            <div class="form-group"><label>Total Staff</label><input type="number" id="staffCount" class="form-input" value="8" oninput="calculate()"></div>
-                            <div class="form-group"><label>Patients/Provider/Day</label><input type="number" id="patientsPerDay" class="form-input" value="20" oninput="calculate()"></div>
-                            <div class="form-group"><label>Avg Revenue/Visit</label><input type="number" id="revenuePerVisit" class="form-input" value="350" oninput="calculate()"></div>
-                        </div>
-                    </div></div>
+    <main class="main">
+        <!-- PRACTICE SETUP -->
+        <div class="setup-card">
+            <div class="setup-title">🏥 Practice Profile</div>
+            <div class="setup-grid">
+                <div class="field">
+                    <label>Practice Name</label>
+                    <input type="text" id="practiceName" placeholder="Enter name..." oninput="calc()">
                 </div>
-
-                <!-- Clinical Pain -->
-                <div class="card" id="card-clinical">
-                    <div class="card-header" onclick="toggleCard('clinical')">
-                        <div style="display:flex;align-items:center"><div class="card-icon icon-red">🩺</div><div class="card-title"><h3>Clinical Workflow</h3><p>Documentation & clinical tasks</p></div></div>
-                        <div style="display:flex;align-items:center;gap:10px"><span class="card-value pain" id="clinicalTotal">$0</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
-                    </div>
-                    <div class="card-content"><div class="card-body">
-                        <div class="pain-item"><div class="pain-header"><div class="pain-info"><h4>After-Hours Charting</h4><p>Provider documentation outside patient hours</p></div><div class="pain-cost"><span class="pain-cost-label">Annual</span><span class="pain-cost-value" id="chartingCost">$0</span></div></div><div class="pain-inputs"><div class="pain-field"><label>Hrs/Day</label><input type="number" id="chartingHours" value="1" step="0.5" oninput="calculate()"></div><div class="pain-field"><label>$/Hr</label><input type="number" id="chartingRate" value="200" oninput="calculate()"></div></div></div>
-                        <div class="pain-item"><div class="pain-header"><div class="pain-info"><h4>Prior Authorizations</h4><p>PA requests and follow-ups</p></div><div class="pain-cost"><span class="pain-cost-label">Annual</span><span class="pain-cost-value" id="priorAuthCost">$0</span></div></div><div class="pain-inputs"><div class="pain-field"><label>PAs/Wk</label><input type="number" id="priorAuthsPerWeek" value="15" oninput="calculate()"></div><div class="pain-field"><label>Min/PA</label><input type="number" id="priorAuthMinutes" value="45" oninput="calculate()"></div></div></div>
-                        <div class="pain-item"><div class="pain-header"><div class="pain-info"><h4>Patient Lookup & Rx</h4><p>Chart searching, prescription management</p></div><div class="pain-cost"><span class="pain-cost-label">Annual</span><span class="pain-cost-value" id="lookupRxCost">$0</span></div></div><div class="pain-inputs"><div class="pain-field"><label>Min/Pt</label><input type="number" id="lookupMinutes" value="8" oninput="calculate()"></div><div class="pain-field"><label>Rx Min/Day</label><input type="number" id="rxMinutes" value="45" oninput="calculate()"></div></div></div>
-                    </div></div>
+                <div class="field">
+                    <label>Current EHR System</label>
+                    <select id="currentEHR" onchange="calc()">
+                        <option value="1.5">Paper/Manual (1.5x inefficiency)</option>
+                        <option value="1.3">Legacy EHR (1.3x inefficiency)</option>
+                        <option value="1.15">Generic EHR (1.15x inefficiency)</option>
+                        <option value="0.95">Competitor Specialty (0.95x)</option>
+                    </select>
+                    <span class="hint">Affects all time-based costs</span>
                 </div>
-
-                <!-- Revenue Cycle -->
-                <div class="card" id="card-billing">
-                    <div class="card-header" onclick="toggleCard('billing')">
-                        <div style="display:flex;align-items:center"><div class="card-icon icon-gold">💰</div><div class="card-title"><h3>Revenue Cycle</h3><p>Billing, denials, collections</p></div></div>
-                        <div style="display:flex;align-items:center;gap:10px"><span class="card-value pain" id="billingTotal">$0</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
-                    </div>
-                    <div class="card-content"><div class="card-body">
-                        <div class="pain-item"><div class="pain-header"><div class="pain-info"><h4>Claim Denials</h4><p>First-pass denial rate & rework costs</p></div><div class="pain-cost"><span class="pain-cost-label">Annual</span><span class="pain-cost-value" id="denialCost">$0</span></div></div><div class="pain-inputs"><div class="pain-field"><label>Denial %</label><input type="number" id="denialRate" value="8" oninput="calculate()"></div><div class="pain-field"><label>Rework $</label><input type="number" id="reworkCost" value="35" oninput="calculate()"></div></div></div>
-                        <div class="pain-item"><div class="pain-header"><div class="pain-info"><h4>Collection Gap</h4><p>Current vs 95% target collection rate</p></div><div class="pain-cost"><span class="pain-cost-label">Lost Rev</span><span class="pain-cost-value" id="collectionCost">$0</span></div></div><div class="pain-inputs"><div class="pain-field"><label>Current %</label><input type="number" id="collectionRate" value="92" oninput="calculate()"></div><div class="pain-field"><label>Target %</label><input type="number" id="collectionTarget" value="95" oninput="calculate()"></div></div></div>
-                        <div class="pain-item"><div class="pain-header"><div class="pain-info"><h4>Missed Charges</h4><p>Unbilled services & supplies</p></div><div class="pain-cost"><span class="pain-cost-label">Lost Rev</span><span class="pain-cost-value" id="missedChargeCost">$0</span></div></div><div class="pain-inputs"><div class="pain-field"><label>% Revenue</label><input type="number" id="missedChargeRate" value="2" step="0.5" oninput="calculate()"></div></div></div>
-                    </div></div>
+                <div class="field">
+                    <label>Number of Providers</label>
+                    <input type="number" id="providers" value="2" min="1" oninput="calc()">
+                    <span class="hint">Physicians, PAs, NPs</span>
                 </div>
-
-                <!-- Patient Flow -->
-                <div class="card" id="card-patient">
-                    <div class="card-header" onclick="toggleCard('patient')">
-                        <div style="display:flex;align-items:center"><div class="card-icon icon-purple">📅</div><div class="card-title"><h3>Patient Flow</h3><p>Scheduling, no-shows, phones</p></div></div>
-                        <div style="display:flex;align-items:center;gap:10px"><span class="card-value pain" id="patientTotal">$0</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
-                    </div>
-                    <div class="card-content"><div class="card-body">
-                        <div class="pain-item"><div class="pain-header"><div class="pain-info"><h4>No-Shows</h4><p>Missed appointments = lost revenue</p></div><div class="pain-cost"><span class="pain-cost-label">Lost Rev</span><span class="pain-cost-value" id="noShowCost">$0</span></div></div><div class="pain-inputs"><div class="pain-field"><label>No-Show %</label><input type="number" id="noShowRate" value="12" oninput="calculate()"></div></div></div>
-                        <div class="pain-item"><div class="pain-header"><div class="pain-info"><h4>Admin Overhead</h4><p>Check-in, phones, insurance verification</p></div><div class="pain-cost"><span class="pain-cost-label">Annual</span><span class="pain-cost-value" id="adminCost">$0</span></div></div><div class="pain-inputs"><div class="pain-field"><label>Calls/Day</label><input type="number" id="callsPerDay" value="50" oninput="calculate()"></div><div class="pain-field"><label>Min/Call</label><input type="number" id="callMinutes" value="4" oninput="calculate()"></div></div></div>
-                    </div></div>
+                <div class="field">
+                    <label>Support Staff</label>
+                    <input type="number" id="staff" value="8" min="0" oninput="calc()">
+                    <span class="hint">MAs, front desk, billing, etc.</span>
                 </div>
-
-                <!-- Compliance -->
-                <div class="card" id="card-compliance">
-                    <div class="card-header" onclick="toggleCard('compliance')">
-                        <div style="display:flex;align-items:center"><div class="card-icon icon-green">⚖️</div><div class="card-title"><h3>Compliance & Ops</h3><p>MIPS, IT, training</p></div></div>
-                        <div style="display:flex;align-items:center;gap:10px"><span class="card-value pain" id="complianceTotal">$0</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
-                    </div>
-                    <div class="card-content"><div class="card-body">
-                        <div class="pain-item"><div class="pain-header"><div class="pain-info"><h4>MIPS Opportunity</h4><p>Medicare payment adjustment potential</p></div><div class="pain-cost"><span class="pain-cost-label">Opportunity</span><span class="pain-cost-value" id="mipsCost">$0</span></div></div><div class="pain-inputs"><div class="pain-field"><label>Current</label><select id="mipsStatus" onchange="calculate()"><option value="-9">-9%</option><option value="-5">-5%</option><option value="0" selected>0%</option><option value="3">+3%</option></select></div><div class="pain-field"><label>Target</label><select id="mipsTarget" onchange="calculate()"><option value="0">0%</option><option value="3" selected>+3%</option><option value="6">+6%</option><option value="9">+9%</option></select></div></div></div>
-                        <div class="pain-item"><div class="pain-header"><div class="pain-info"><h4>IT & Training</h4><p>Current system maintenance & onboarding</p></div><div class="pain-cost"><span class="pain-cost-label">Annual</span><span class="pain-cost-value" id="itTrainingCost">$0</span></div></div><div class="pain-inputs"><div class="pain-field"><label>IT $/Mo</label><input type="number" id="itMonthlyCost" value="500" oninput="calculate()"></div><div class="pain-field"><label>Hires/Yr</label><input type="number" id="newHires" value="2" oninput="calculate()"></div></div></div>
-                    </div></div>
+                <div class="field">
+                    <label>Patients/Provider/Day</label>
+                    <input type="number" id="patientsPerDay" value="20" min="1" oninput="calc()">
                 </div>
+                <div class="field">
+                    <label>Avg Revenue/Visit</label>
+                    <input type="number" id="revenuePerVisit" value="350" min="0" oninput="calc()">
+                    <span class="hint">Include procedures, products</span>
+                </div>
+                <div class="field">
+                    <label>Working Days/Month</label>
+                    <input type="number" id="workDays" value="20" min="1" oninput="calc()">
+                </div>
+                <div class="field">
+                    <label>Avg Staff Hourly Cost</label>
+                    <input type="number" id="staffHourlyCost" value="25" min="0" oninput="calc()">
+                    <span class="hint">Blended rate for non-providers</span>
+                </div>
+            </div>
+        </div>
 
-                <!-- ModMed Investment -->
-                <div class="card" id="card-invest">
-                    <div class="card-header" onclick="toggleCard('invest')">
-                        <div style="display:flex;align-items:center"><div class="card-icon icon-purple">💼</div><div class="card-title"><h3>ModMed Investment</h3><p>Subscription & implementation</p></div></div>
-                        <div style="display:flex;align-items:center;gap:10px"><span class="card-value" id="year1InvestDisplay">$0</span><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+        <!-- CALCULATED METRICS -->
+        <div style="background:#e0e7ff;border-radius:8px;padding:12px 16px;margin-bottom:20px;display:flex;justify-content:space-around;flex-wrap:wrap;gap:12px">
+            <div style="text-align:center"><div style="font-size:11px;color:#4338ca">Annual Visits</div><div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600" id="annualVisits">0</div></div>
+            <div style="text-align:center"><div style="font-size:11px;color:#4338ca">Annual Revenue</div><div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600" id="annualRevenue">$0</div></div>
+            <div style="text-align:center"><div style="font-size:11px;color:#4338ca">EHR Multiplier</div><div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600" id="ehrMultiplier">1.5x</div></div>
+            <div style="text-align:center"><div style="font-size:11px;color:#4338ca">Annual Staff Hours</div><div style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600" id="annualStaffHours">0</div></div>
+        </div>
+
+        <!-- COST BREAKDOWN -->
+        <div class="breakdown-grid">
+            <!-- Clinical Workflow -->
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <h3>🩺 Clinical Workflow</h3>
+                    <span class="total" id="clinicalTotal">$0</span>
+                </div>
+                <div class="breakdown-body">
+                    <div class="cost-row">
+                        <div class="cost-label">After-Hours Charting<small>Provider time × opportunity cost</small></div>
+                        <input type="number" class="cost-input" id="chartingHours" value="1" step="0.5" oninput="calc()">
+                        <div class="cost-value" id="chartingCost">$0</div>
+                        <div class="cost-calc" id="chartingCalc"></div>
                     </div>
-                    <div class="card-content"><div class="card-body">
-                        <div class="form-grid">
-                            <div class="form-group"><label>Per Provider/Mo</label><input type="number" id="modmedPerProvider" class="form-input" value="700" oninput="calculate()"><span class="form-hint">$500-900 typical</span></div>
-                            <div class="form-group"><label>Per Staff/Mo</label><input type="number" id="modmedPerStaff" class="form-input" value="100" oninput="calculate()"></div>
-                            <div class="form-group"><label>Implementation</label><input type="number" id="modmedImplementation" class="form-input" value="10000" oninput="calculate()"></div>
-                            <div class="form-group"><label>Annual Support</label><input type="number" id="modmedSupport" class="form-input" value="0" oninput="calculate()"></div>
-                        </div>
-                    </div></div>
+                    <div class="cost-row">
+                        <div class="cost-label">Prior Authorizations<small>Staff time on PA requests</small></div>
+                        <input type="number" class="cost-input" id="pasPerWeek" value="15" oninput="calc()">
+                        <div class="cost-value" id="paCost">$0</div>
+                        <div class="cost-calc" id="paCalc"></div>
+                    </div>
+                    <div class="cost-row">
+                        <div class="cost-label">Patient Lookup Time<small>Chart searching per patient</small></div>
+                        <input type="number" class="cost-input" id="lookupMin" value="8" oninput="calc()">
+                        <div class="cost-value" id="lookupCost">$0</div>
+                        <div class="cost-calc" id="lookupCalc"></div>
+                    </div>
+                    <div class="cost-row">
+                        <div class="cost-label">Rx Management<small>Daily prescription tasks</small></div>
+                        <input type="number" class="cost-input" id="rxMin" value="45" oninput="calc()">
+                        <div class="cost-value" id="rxCost">$0</div>
+                        <div class="cost-calc" id="rxCalc"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div class="pain-box">
-                    <div class="pain-box-label">💔 Cost of Doing Nothing</div>
-                    <div class="pain-box-value" id="totalPainCost">$0</div>
-                    <div style="font-size:13px;opacity:.9">lost every year</div>
-                    <div class="pain-breakdown">
-                        <div class="pain-breakdown-item"><span>Clinical</span><span id="summClinical">$0</span></div>
-                        <div class="pain-breakdown-item"><span>Revenue Cycle</span><span id="summBilling">$0</span></div>
-                        <div class="pain-breakdown-item"><span>Patient Flow</span><span id="summPatient">$0</span></div>
-                        <div class="pain-breakdown-item"><span>Compliance</span><span id="summCompliance">$0</span></div>
+            <!-- Revenue Cycle -->
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <h3>💰 Revenue Cycle</h3>
+                    <span class="total" id="revenueTotal">$0</span>
+                </div>
+                <div class="breakdown-body">
+                    <div class="cost-row">
+                        <div class="cost-label">Claim Denial Rate<small>Rework cost per denied claim</small></div>
+                        <input type="number" class="cost-input" id="denialRate" value="8" oninput="calc()">
+                        <div class="cost-value" id="denialCost">$0</div>
+                        <div class="cost-calc" id="denialCalc"></div>
                     </div>
-                    <div class="pain-3year"><div class="pain-3year-label">3-Year Cost of Inaction</div><div class="pain-3year-value" id="threeYearPain">$0</div></div>
-                </div>
-                <div class="roi-box">
-                    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.9">Return on Investment</div>
-                    <div class="roi-value" id="roiPercent">0%</div>
-                    <div class="roi-payback">Payback: <strong id="paybackMonths">0</strong> months</div>
-                </div>
-                <div class="savings-card">
-                    <div class="savings-header"><h3>✨ Annual Savings</h3></div>
-                    <div class="savings-body">
-                        <div class="savings-item"><span>Clinical</span><span id="saveClinical">$0</span></div>
-                        <div class="savings-item"><span>Revenue</span><span id="saveRevenue">$0</span></div>
-                        <div class="savings-item"><span>Patient Flow</span><span id="savePatient">$0</span></div>
-                        <div class="savings-item"><span>Operations</span><span id="saveOps">$0</span></div>
-                        <div style="height:1px;background:var(--border);margin:8px 0"></div>
-                        <div class="savings-item" style="font-weight:600"><span>Total</span><span id="totalSavings">$0</span></div>
+                    <div class="cost-row">
+                        <div class="cost-label">Collection Rate Gap<small>Current vs 95% target</small></div>
+                        <input type="number" class="cost-input" id="collectionRate" value="92" oninput="calc()">
+                        <div class="cost-value" id="collectionCost">$0</div>
+                        <div class="cost-calc" id="collectionCalc"></div>
+                    </div>
+                    <div class="cost-row">
+                        <div class="cost-label">Missed Charges<small>% of revenue unbilled</small></div>
+                        <input type="number" class="cost-input" id="missedCharges" value="2" step="0.5" oninput="calc()">
+                        <div class="cost-value" id="missedCost">$0</div>
+                        <div class="cost-calc" id="missedCalc"></div>
+                    </div>
+                    <div class="cost-row">
+                        <div class="cost-label">Billing Staff Time<small>Manual work hrs/week/person</small></div>
+                        <input type="number" class="cost-input" id="billingHrs" value="15" oninput="calc()">
+                        <div class="cost-value" id="billingCost">$0</div>
+                        <div class="cost-calc" id="billingCalc"></div>
                     </div>
                 </div>
-                <div class="net-card">
-                    <div class="net-item"><span>Year 1 Investment</span><span id="displayY1Invest">$0</span></div>
-                    <div class="net-item"><span>Year 1 Savings</span><span id="displayY1Save">$0</span></div>
-                    <div class="net-item highlight"><span>Net Year 1</span><span id="netYear1">$0</span></div>
-                    <div class="net-item highlight"><span>Net 3-Year</span><span id="netYear3">$0</span></div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- COMPARISON VIEW - BRE'S QUICK REFERENCE -->
-    <div id="view-compare" class="view">
-        <main class="compare-main">
-            <!-- Header -->
-            <div class="compare-header">
-                <h1>⚡ Value Proposition at a Glance</h1>
-                <p>Your quick reference for communicating ModMed's value. Use this for presentations, meetings, or on-the-fly conversations.</p>
-                <div class="compare-practice" id="comparePracticeName">Practice Name</div>
             </div>
 
-            <!-- Quick Inputs -->
-            <div class="quick-inputs">
-                <h3>⚙️ Quick Setup</h3>
-                <div class="quick-grid">
-                    <div class="form-group"><label>Practice</label><input type="text" id="qPracticeName" class="form-input" placeholder="Name..." oninput="syncInputs('qPracticeName','practiceName')"></div>
-                    <div class="form-group"><label>Current EHR</label><select id="qCurrentEHR" class="form-input" onchange="syncInputs('qCurrentEHR','currentEHR');calculate()"><option value="paper">Paper (1.5x)</option><option value="legacy">Legacy (1.3x)</option><option value="generic">Generic (1.15x)</option><option value="competitor">Competitor (0.95x)</option></select></div>
-                    <div class="form-group"><label>Providers</label><input type="number" id="qProviders" class="form-input" value="2" oninput="syncInputs('qProviders','providerCount');calculate()"></div>
-                    <div class="form-group"><label>$/Visit Avg</label><input type="number" id="qRevenue" class="form-input" value="350" oninput="syncInputs('qRevenue','revenuePerVisit');calculate()"></div>
-                    <div class="form-group"><label>Pts/Day</label><input type="number" id="qPatients" class="form-input" value="20" oninput="syncInputs('qPatients','patientsPerDay');calculate()"></div>
+            <!-- Patient Flow -->
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <h3>📅 Patient Flow</h3>
+                    <span class="total" id="patientTotal">$0</span>
                 </div>
-            </div>
-
-            <!-- Side by Side Comparison Table -->
-            <div class="compare-table">
-                <div class="compare-row header">
-                    <div class="compare-cell">Metric</div>
-                    <div class="compare-cell">Current State</div>
-                    <div class="compare-cell">With ModMed</div>
-                </div>
-                <div class="compare-row">
-                    <div class="compare-cell">Charting Time/Day</div>
-                    <div class="compare-cell current metric" data-label="Current" id="cmpChartingCurrent">1.5 hrs</div>
-                    <div class="compare-cell modmed metric" data-label="ModMed" id="cmpChartingModmed">0.5 hrs</div>
-                </div>
-                <div class="compare-row">
-                    <div class="compare-cell">Denial Rate</div>
-                    <div class="compare-cell current metric" data-label="Current" id="cmpDenialCurrent">8%</div>
-                    <div class="compare-cell modmed metric" data-label="ModMed" id="cmpDenialModmed">4%</div>
-                </div>
-                <div class="compare-row">
-                    <div class="compare-cell">No-Show Rate</div>
-                    <div class="compare-cell current metric" data-label="Current" id="cmpNoShowCurrent">12%</div>
-                    <div class="compare-cell modmed metric" data-label="ModMed" id="cmpNoShowModmed">7%</div>
-                </div>
-                <div class="compare-row">
-                    <div class="compare-cell">Collection Rate</div>
-                    <div class="compare-cell current metric" data-label="Current" id="cmpCollectionCurrent">92%</div>
-                    <div class="compare-cell modmed metric" data-label="ModMed" id="cmpCollectionModmed">95%+</div>
-                </div>
-                <div class="compare-row">
-                    <div class="compare-cell">MIPS Status</div>
-                    <div class="compare-cell current metric" data-label="Current" id="cmpMipsCurrent">0%</div>
-                    <div class="compare-cell modmed metric" data-label="ModMed" id="cmpMipsModmed">+3-6%</div>
-                </div>
-                <div class="compare-row">
-                    <div class="compare-cell">Annual Inefficiency Cost</div>
-                    <div class="compare-cell current metric" data-label="Current" id="cmpCostCurrent" style="font-size:16px;font-weight:700">$1.2M</div>
-                    <div class="compare-cell modmed metric" data-label="ModMed" id="cmpCostModmed" style="font-size:16px;font-weight:700">Recovered</div>
+                <div class="breakdown-body">
+                    <div class="cost-row">
+                        <div class="cost-label">No-Show Rate<small>Lost revenue from missed appts</small></div>
+                        <input type="number" class="cost-input" id="noShowRate" value="12" oninput="calc()">
+                        <div class="cost-value" id="noShowCost">$0</div>
+                        <div class="cost-calc" id="noShowCalc"></div>
+                    </div>
+                    <div class="cost-row">
+                        <div class="cost-label">Phone Calls/Day<small>Staff time on calls</small></div>
+                        <input type="number" class="cost-input" id="callsPerDay" value="50" oninput="calc()">
+                        <div class="cost-value" id="phoneCost">$0</div>
+                        <div class="cost-calc" id="phoneCalc"></div>
+                    </div>
+                    <div class="cost-row">
+                        <div class="cost-label">Check-in/out Time<small>Minutes per patient</small></div>
+                        <input type="number" class="cost-input" id="checkinMin" value="8" oninput="calc()">
+                        <div class="cost-value" id="checkinCost">$0</div>
+                        <div class="cost-calc" id="checkinCalc"></div>
+                    </div>
+                    <div class="cost-row">
+                        <div class="cost-label">Insurance Verify<small>Manual eligibility mins/pt</small></div>
+                        <input type="number" class="cost-input" id="verifyMin" value="7" oninput="calc()">
+                        <div class="cost-value" id="verifyCost">$0</div>
+                        <div class="cost-calc" id="verifyCalc"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Value Props -->
-            <div class="value-props">
-                <div class="value-prop">
-                    <div class="value-prop-icon">💸</div>
-                    <h4>Cost of Inaction</h4>
-                    <div class="big-number" id="vpPainCost" style="color:var(--red)">$0</div>
-                    <p>Lost annually by not switching</p>
+            <!-- Compliance & Ops -->
+            <div class="breakdown-card">
+                <div class="breakdown-header">
+                    <h3>⚖️ Compliance & Ops</h3>
+                    <span class="total" id="opsTotal">$0</span>
                 </div>
-                <div class="value-prop">
-                    <div class="value-prop-icon">📈</div>
-                    <h4>ROI</h4>
-                    <div class="big-number" id="vpRoi">0%</div>
-                    <p>Return on investment Year 1</p>
-                </div>
-                <div class="value-prop">
-                    <div class="value-prop-icon">⏱️</div>
-                    <h4>Payback</h4>
-                    <div class="big-number" id="vpPayback">0</div>
-                    <p>Months to break even</p>
-                </div>
-                <div class="value-prop">
-                    <div class="value-prop-icon">🎯</div>
-                    <h4>3-Year Benefit</h4>
-                    <div class="big-number" id="vpNet3" style="color:var(--green)">$0</div>
-                    <p>Net benefit over 3 years</p>
+                <div class="breakdown-body">
+                    <div class="cost-row">
+                        <div class="cost-label">MIPS Opportunity<small>Current → Target adjustment</small></div>
+                        <select class="cost-input" id="mipsCurrent" style="width:auto" onchange="calc()">
+                            <option value="-9">-9%</option>
+                            <option value="-5">-5%</option>
+                            <option value="0" selected>0%</option>
+                            <option value="3">+3%</option>
+                        </select>
+                        <div class="cost-value" id="mipsCost">$0</div>
+                        <div class="cost-calc" id="mipsCalc"></div>
+                    </div>
+                    <div class="cost-row">
+                        <div class="cost-label">IT Support Monthly<small>Current system maintenance</small></div>
+                        <input type="number" class="cost-input" id="itMonthly" value="500" oninput="calc()">
+                        <div class="cost-value" id="itCost">$0</div>
+                        <div class="cost-calc" id="itCalc"></div>
+                    </div>
+                    <div class="cost-row">
+                        <div class="cost-label">Training New Hires<small># new staff per year</small></div>
+                        <input type="number" class="cost-input" id="newHires" value="2" oninput="calc()">
+                        <div class="cost-value" id="trainingCost">$0</div>
+                        <div class="cost-calc" id="trainingCalc"></div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Talk Track Guide -->
-            <div class="talk-track">
-                <h3>🎯 Sandler Talk Track</h3>
-                <div class="talk-step">
-                    <span class="talk-step-num">1</span>
-                    <strong>Surface the Pain</strong>
-                    <p>Get them to describe their current challenges</p>
-                    <div class="script">"Tell me about your current charting workflow. How much time are providers spending after hours?"</div>
-                </div>
-                <div class="talk-step">
-                    <span class="talk-step-num">2</span>
-                    <strong>Quantify the Impact</strong>
-                    <p>Use the numbers to make it real</p>
-                    <div class="script">"Based on what you've shared, you're losing approximately <strong id="scriptPain">$X</strong> annually in inefficiencies. Over 3 years, that's <strong id="scriptPain3">$X</strong>."</div>
-                </div>
-                <div class="talk-step">
-                    <span class="talk-step-num">3</span>
-                    <strong>Present the Solution</strong>
-                    <p>Show how ModMed specifically addresses their pain</p>
-                    <div class="script">"ModMed's specialty templates and voice documentation cut charting time by 70%. Our integrated billing reduces denials by 50%."</div>
-                </div>
-                <div class="talk-step">
-                    <span class="talk-step-num">4</span>
-                    <strong>Close with Value</strong>
-                    <p>Make the decision easy</p>
-                    <div class="script">"For an investment of <strong id="scriptInvest">$X</strong>, you'll recover <strong id="scriptSavings">$X</strong> in Year 1 alone. That's a <strong id="scriptRoi">X%</strong> ROI with <strong id="scriptPayback">X</strong>-month payback."</div>
-                </div>
+        <!-- IMPROVEMENT ASSUMPTIONS -->
+        <div class="assumptions">
+            <h4>📈 ModMed Improvement Assumptions (adjust as needed)</h4>
+            <div class="assumption-grid">
+                <div class="assumption-item"><span>Charting reduction</span><input type="number" id="impCharting" value="70" oninput="calc()">%</div>
+                <div class="assumption-item"><span>Denial reduction</span><input type="number" id="impDenial" value="50" oninput="calc()">%</div>
+                <div class="assumption-item"><span>No-show reduction</span><input type="number" id="impNoShow" value="40" oninput="calc()">%</div>
+                <div class="assumption-item"><span>Admin time reduction</span><input type="number" id="impAdmin" value="50" oninput="calc()">%</div>
+                <div class="assumption-item"><span>Charge capture improve</span><input type="number" id="impCharge" value="75" oninput="calc()">%</div>
+                <div class="assumption-item"><span>PA time reduction</span><input type="number" id="impPA" value="60" oninput="calc()">%</div>
             </div>
+        </div>
 
-            <!-- Bottom Line Summary -->
-            <div class="bottom-line">
-                <h3>📊 THE BOTTOM LINE</h3>
-                <div class="bottom-stats">
-                    <div><div class="bottom-stat-label">Annual Loss (Status Quo)</div><div class="bottom-stat-value red" id="blPain">$0</div></div>
-                    <div><div class="bottom-stat-label">Year 1 Investment</div><div class="bottom-stat-value purple" id="blInvest">$0</div></div>
-                    <div><div class="bottom-stat-label">3-Year Net Benefit</div><div class="bottom-stat-value green" id="blNet3">$0</div></div>
+        <!-- MODMED INVESTMENT -->
+        <div class="invest-section">
+            <div class="invest-title">💼 ModMed Investment</div>
+            <div class="invest-grid">
+                <div class="invest-field">
+                    <label>Per Provider/Month</label>
+                    <input type="number" id="mmProvider" value="700" oninput="calc()">
+                </div>
+                <div class="invest-field">
+                    <label>Per Staff User/Month</label>
+                    <input type="number" id="mmStaff" value="100" oninput="calc()">
+                </div>
+                <div class="invest-field">
+                    <label>Implementation (one-time)</label>
+                    <input type="number" id="mmImpl" value="10000" oninput="calc()">
+                </div>
+                <div class="invest-field">
+                    <label>Annual Support</label>
+                    <input type="number" id="mmSupport" value="0" oninput="calc()">
                 </div>
             </div>
-        </main>
-    </div>
+            <div class="invest-totals">
+                <div class="invest-total"><div class="invest-total-label">Monthly</div><div class="invest-total-value" id="mmMonthly">$0</div></div>
+                <div class="invest-total"><div class="invest-total-label">Year 1</div><div class="invest-total-value" id="mmYear1">$0</div></div>
+                <div class="invest-total"><div class="invest-total-label">Ongoing/Year</div><div class="invest-total-value" id="mmOngoing">$0</div></div>
+            </div>
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="summary-panel">
+            <div class="summary-grid">
+                <div class="summary-item pain">
+                    <div class="summary-label">💔 Annual Cost of Doing Nothing</div>
+                    <div class="summary-value" id="totalPain">$0</div>
+                    <div class="summary-sub">3-Year: <span id="pain3yr">$0</span></div>
+                </div>
+                <div class="summary-item savings">
+                    <div class="summary-label">✨ Projected Annual Savings</div>
+                    <div class="summary-value" id="totalSavings">$0</div>
+                    <div class="summary-sub" id="savingsBreakdown"></div>
+                </div>
+                <div class="summary-item roi">
+                    <div class="summary-label">📈 Year 1 ROI</div>
+                    <div class="summary-value" id="roi">0%</div>
+                    <div class="summary-sub">Payback: <span id="payback">0</span> months</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TALK TRACK -->
+        <div class="talk-track">
+            <h3>🎯 Sandler Talk Track</h3>
+            <div class="talk-step">
+                <span class="talk-step-num">1</span><strong>Surface the Pain</strong>
+                <p>Get them to describe their challenges</p>
+                <div class="script">"Tell me about your charting workflow. How much time are providers spending after hours on documentation?"</div>
+            </div>
+            <div class="talk-step">
+                <span class="talk-step-num">2</span><strong>Quantify the Impact</strong>
+                <p>Use the numbers to make it real</p>
+                <div class="script">"Based on what you've shared, you're losing approximately <strong id="scriptPain">$0</strong> annually. Over 3 years, that's <strong id="scriptPain3">$0</strong> walking out the door."</div>
+            </div>
+            <div class="talk-step">
+                <span class="talk-step-num">3</span><strong>Present the Solution</strong>
+                <div class="script">"ModMed's specialty templates reduce charting time by <strong id="scriptCharting">70%</strong>. Integrated billing cuts denials by <strong id="scriptDenial">50%</strong>. Automated reminders reduce no-shows by <strong id="scriptNoShow">40%</strong>."</div>
+            </div>
+            <div class="talk-step">
+                <span class="talk-step-num">4</span><strong>Close with Value</strong>
+                <div class="script">"For <strong id="scriptInvest">$0</strong> in Year 1, you'll recover <strong id="scriptSave">$0</strong>. That's a <strong id="scriptRoi">0%</strong> ROI with <strong id="scriptPayback">0</strong>-month payback."</div>
+            </div>
+        </div>
+
+        <!-- BOTTOM LINE -->
+        <div class="bottom-line">
+            <h3>📊 THE BOTTOM LINE</h3>
+            <div class="bottom-grid">
+                <div class="bottom-stat"><div class="bottom-label">Annual Loss (Status Quo)</div><div class="bottom-value red" id="blPain">$0</div></div>
+                <div class="bottom-stat"><div class="bottom-label">Year 1 Investment</div><div class="bottom-value purple" id="blInvest">$0</div></div>
+                <div class="bottom-stat"><div class="bottom-label">3-Year Net Benefit</div><div class="bottom-value green" id="blNet3">$0</div></div>
+            </div>
+        </div>
+    </main>
 
     <script>
-        const ehrMult={paper:1.5,legacy:1.3,generic:1.15,competitor:0.95};
-        const specialty={
-            plastic:{patients:20,revenue:350,charting:1,denial:8,noShow:12,collection:92,pas:15,calls:50},
-            allergy:{patients:30,revenue:180,charting:1.5,denial:10,noShow:15,collection:90,pas:25,calls:80}
+        const specialty = {
+            plastic: {providers:2,staff:8,patients:20,revenue:350,charting:1,pas:15,denial:8,noShow:12,calls:50},
+            allergy: {providers:2,staff:12,patients:30,revenue:180,charting:1.5,pas:25,denial:10,noShow:15,calls:80}
         };
-        let currentSpec='plastic';
+        let current = 'plastic';
 
-        function formatCurrency(n){return Math.abs(n)>=1e6?'$'+(n/1e6).toFixed(1)+'M':'$'+Math.round(n).toLocaleString()}
-        function getVal(id,def=0){const e=document.getElementById(id);return e?(parseFloat(e.value)||def):def}
-        function setVal(id,v){const e=document.getElementById(id);if(e)e.value=v}
-        function toggleCard(id){document.getElementById('card-'+id).classList.toggle('expanded')}
-        
-        function switchView(v){
-            document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
-            document.querySelectorAll('.view-tab').forEach(el=>el.classList.remove('active'));
-            document.getElementById('view-'+v).classList.add('active');
-            document.querySelector('.view-tab[onclick*="'+v+'"]').classList.add('active');
-            if(v==='compare')updateComparison();
-        }
+        function fmt(n){return Math.abs(n)>=1e6?'$'+(n/1e6).toFixed(1)+'M':'$'+Math.round(n).toLocaleString()}
+        function getN(id,d=0){const e=document.getElementById(id);return e?(parseFloat(e.value)||d):d}
+        function setN(id,v){const e=document.getElementById(id);if(e)e.value=v}
 
         function switchSpecialty(s){
-            currentSpec=s;
-            document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active'));
+            current=s;
+            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
             document.getElementById('tab-'+s).classList.add('active');
             const c=specialty[s];
-            setVal('patientsPerDay',c.patients);setVal('qPatients',c.patients);
-            setVal('revenuePerVisit',c.revenue);setVal('qRevenue',c.revenue);
-            setVal('chartingHours',c.charting);
-            setVal('denialRate',c.denial);
-            setVal('noShowRate',c.noShow);
-            setVal('collectionRate',c.collection);
-            setVal('priorAuthsPerWeek',c.pas);
-            setVal('callsPerDay',c.calls);
-            calculate();
+            setN('providers',c.providers);
+            setN('staff',c.staff);
+            setN('patientsPerDay',c.patients);
+            setN('revenuePerVisit',c.revenue);
+            setN('chartingHours',c.charting);
+            setN('pasPerWeek',c.pas);
+            setN('denialRate',c.denial);
+            setN('noShowRate',c.noShow);
+            setN('callsPerDay',c.calls);
+            calc();
         }
 
-        function syncInputs(from,to){
-            const f=document.getElementById(from),t=document.getElementById(to);
-            if(f&&t)t.value=f.value;
-            if(from==='qPracticeName')document.getElementById('comparePracticeName').textContent=f.value||'Practice Name';
-            calculate();
-        }
-
-        function calculate(){
-            const ehr=document.getElementById('currentEHR').value;
-            const mult=ehrMult[ehr];
-            const providers=getVal('providerCount',2);
-            const staff=getVal('staffCount',8);
-            const patientsPerDay=getVal('patientsPerDay',20);
-            const revenuePerVisit=getVal('revenuePerVisit',350);
-            const annualWorkDays=20*12;
-            const annualVisits=providers*patientsPerDay*annualWorkDays;
-            const annualRevenue=annualVisits*revenuePerVisit;
-
-            // Clinical
-            const chartingCost=getVal('chartingHours',1)*200*2*annualWorkDays*providers*mult;
-            const paMinutes=getVal('priorAuthMinutes',45);
-            const pasPerWeek=getVal('priorAuthsPerWeek',15);
-            const priorAuthCost=(paMinutes/60)*30*pasPerWeek*52*mult;
-            const lookupCost=(getVal('lookupMinutes',8)/60)*50*annualVisits*mult;
-            const rxCost=(getVal('rxMinutes',45)/60)*35*annualWorkDays*mult;
-            const lookupRxCost=lookupCost+rxCost;
-            const clinicalTotal=chartingCost+priorAuthCost+lookupRxCost;
-
-            // Billing
-            const denialRate=getVal('denialRate',8)/100*mult;
-            const denialCost=annualVisits*denialRate*getVal('reworkCost',35);
-            const collectionGap=Math.max(0,getVal('collectionTarget',95)/100-getVal('collectionRate',92)/100);
-            const collectionCost=annualRevenue*collectionGap;
-            const missedChargeCost=annualRevenue*(getVal('missedChargeRate',2)/100)*mult;
-            const billingTotal=denialCost+collectionCost+missedChargeCost;
-
-            // Patient
-            const noShowCost=annualVisits*(getVal('noShowRate',12)/100)*revenuePerVisit;
-            const phoneCost=(getVal('callMinutes',4)/60)*25*getVal('callsPerDay',50)*annualWorkDays*mult;
-            const checkinCost=(8/60)*20*annualVisits*mult;
-            const adminCost=phoneCost+checkinCost;
-            const patientTotal=noShowCost+adminCost;
-
-            // Compliance
-            const mipsImpact=annualRevenue*(parseFloat(document.getElementById('mipsTarget').value)/100-parseFloat(document.getElementById('mipsStatus').value)/100);
-            const mipsCost=Math.abs(mipsImpact);
-            const itCost=getVal('itMonthlyCost',500)*12;
-            const trainingCost=getVal('newHires',2)*30*30*mult;
-            const itTrainingCost=itCost+trainingCost;
-            const complianceTotal=mipsCost+itTrainingCost;
-
-            const totalPain=clinicalTotal+billingTotal+patientTotal+complianceTotal;
-
-            // Investment
-            const monthly=(providers*getVal('modmedPerProvider',700))+(staff*getVal('modmedPerStaff',100));
-            const year1Invest=(monthly*12)+getVal('modmedImplementation',10000)+getVal('modmedSupport',0);
-            const ongoing=monthly*12;
-
-            // Savings (conservative 50% improvements)
-            const saveClinical=clinicalTotal*0.6;
-            const saveRevenue=(denialCost*0.5)+(collectionCost*0.5)+(missedChargeCost*0.75);
-            const savePatient=(noShowCost*0.4)+(adminCost*0.5);
-            const saveOps=mipsImpact+(itCost*0.3)+(trainingCost*0.5);
-            const totalSavings=saveClinical+saveRevenue+savePatient+saveOps;
-
-            const netYear1=totalSavings-year1Invest;
-            const netYear3=netYear1+((totalSavings-ongoing)*2);
-            const roi=year1Invest>0?(netYear1/year1Invest)*100:0;
-            const paybackMonths=(totalSavings/12)>0?Math.ceil(year1Invest/(totalSavings/12)):99;
-
-            // Update Calculator View
-            document.getElementById('chartingCost').textContent=formatCurrency(chartingCost);
-            document.getElementById('priorAuthCost').textContent=formatCurrency(priorAuthCost);
-            document.getElementById('lookupRxCost').textContent=formatCurrency(lookupRxCost);
-            document.getElementById('clinicalTotal').textContent=formatCurrency(clinicalTotal);
-            document.getElementById('denialCost').textContent=formatCurrency(denialCost);
-            document.getElementById('collectionCost').textContent=formatCurrency(collectionCost);
-            document.getElementById('missedChargeCost').textContent=formatCurrency(missedChargeCost);
-            document.getElementById('billingTotal').textContent=formatCurrency(billingTotal);
-            document.getElementById('noShowCost').textContent=formatCurrency(noShowCost);
-            document.getElementById('adminCost').textContent=formatCurrency(adminCost);
-            document.getElementById('patientTotal').textContent=formatCurrency(patientTotal);
-            document.getElementById('mipsCost').textContent=formatCurrency(mipsCost);
-            document.getElementById('itTrainingCost').textContent=formatCurrency(itTrainingCost);
-            document.getElementById('complianceTotal').textContent=formatCurrency(complianceTotal);
-
-            document.getElementById('totalPainCost').textContent=formatCurrency(totalPain);
-            document.getElementById('summClinical').textContent=formatCurrency(clinicalTotal);
-            document.getElementById('summBilling').textContent=formatCurrency(billingTotal);
-            document.getElementById('summPatient').textContent=formatCurrency(patientTotal);
-            document.getElementById('summCompliance').textContent=formatCurrency(complianceTotal);
-            document.getElementById('threeYearPain').textContent=formatCurrency(totalPain*3);
-
-            document.getElementById('year1InvestDisplay').textContent=formatCurrency(year1Invest);
-            document.getElementById('roiPercent').textContent=Math.round(roi)+'%';
-            document.getElementById('paybackMonths').textContent=paybackMonths>24?'24+':paybackMonths;
-            document.getElementById('saveClinical').textContent=formatCurrency(saveClinical);
-            document.getElementById('saveRevenue').textContent=formatCurrency(saveRevenue);
-            document.getElementById('savePatient').textContent=formatCurrency(savePatient);
-            document.getElementById('saveOps').textContent=formatCurrency(saveOps);
-            document.getElementById('totalSavings').textContent=formatCurrency(totalSavings);
-            document.getElementById('displayY1Invest').textContent=formatCurrency(year1Invest);
-            document.getElementById('displayY1Save').textContent=formatCurrency(totalSavings);
-            document.getElementById('netYear1').textContent=formatCurrency(netYear1);
-            document.getElementById('netYear3').textContent=formatCurrency(netYear3);
-
-            // Store for comparison & copy
-            window.calcData={
-                name:document.getElementById('practiceName').value||'Practice',
-                ehr:document.getElementById('currentEHR').selectedOptions[0].text,
-                mult,providers,annualRevenue,totalPain,
-                clinicalTotal,billingTotal,patientTotal,complianceTotal,
-                totalSavings,year1Invest,netYear1,netYear3,roi,paybackMonths,
-                chartingHours:getVal('chartingHours',1),
-                denialRate:getVal('denialRate',8),
-                noShowRate:getVal('noShowRate',12),
-                collectionRate:getVal('collectionRate',92),
-                mipsStatus:document.getElementById('mipsStatus').value,
-                mipsTarget:document.getElementById('mipsTarget').value
-            };
-
-            updateComparison();
-        }
-
-        function updateComparison(){
-            const d=window.calcData;if(!d)return;
-            document.getElementById('comparePracticeName').textContent=d.name;
+        function calc(){
+            // Base metrics
+            const mult = parseFloat(document.getElementById('currentEHR').value);
+            const providers = getN('providers',2);
+            const staff = getN('staff',8);
+            const patientsPerDay = getN('patientsPerDay',20);
+            const revenuePerVisit = getN('revenuePerVisit',350);
+            const workDays = getN('workDays',20);
+            const staffHr = getN('staffHourlyCost',25);
+            const providerHr = 200; // Provider opportunity cost
             
-            // Comparison table
-            const chartCurrent=(d.chartingHours*d.mult).toFixed(1);
-            const chartModmed=(d.chartingHours*0.3).toFixed(1);
-            document.getElementById('cmpChartingCurrent').textContent=chartCurrent+' hrs';
-            document.getElementById('cmpChartingModmed').textContent=chartModmed+' hrs';
+            const annualDays = workDays * 12;
+            const annualVisits = providers * patientsPerDay * annualDays;
+            const annualRevenue = annualVisits * revenuePerVisit;
+            const annualStaffHours = staff * workDays * 12 * 8;
             
-            const denialCurrent=(d.denialRate*d.mult).toFixed(0);
-            const denialModmed=(d.denialRate*0.5).toFixed(0);
-            document.getElementById('cmpDenialCurrent').textContent=denialCurrent+'%';
-            document.getElementById('cmpDenialModmed').textContent=denialModmed+'%';
-            
-            document.getElementById('cmpNoShowCurrent').textContent=d.noShowRate+'%';
-            document.getElementById('cmpNoShowModmed').textContent=Math.round(d.noShowRate*0.6)+'%';
-            
-            document.getElementById('cmpCollectionCurrent').textContent=d.collectionRate+'%';
-            document.getElementById('cmpCollectionModmed').textContent='95%+';
-            
-            document.getElementById('cmpMipsCurrent').textContent=d.mipsStatus+'%';
-            document.getElementById('cmpMipsModmed').textContent='+'+d.mipsTarget+'%';
-            
-            document.getElementById('cmpCostCurrent').textContent=formatCurrency(d.totalPain);
-            document.getElementById('cmpCostModmed').textContent=formatCurrency(d.totalSavings)+' saved';
+            // Display base metrics
+            document.getElementById('annualVisits').textContent = annualVisits.toLocaleString();
+            document.getElementById('annualRevenue').textContent = fmt(annualRevenue);
+            document.getElementById('ehrMultiplier').textContent = mult + 'x';
+            document.getElementById('annualStaffHours').textContent = annualStaffHours.toLocaleString();
 
-            // Value props
-            document.getElementById('vpPainCost').textContent=formatCurrency(d.totalPain);
-            document.getElementById('vpRoi').textContent=Math.round(d.roi)+'%';
-            document.getElementById('vpPayback').textContent=d.paybackMonths>24?'24+':d.paybackMonths+' mo';
-            document.getElementById('vpNet3').textContent=formatCurrency(d.netYear3);
+            // === CLINICAL ===
+            const chartingHrs = getN('chartingHours',1);
+            const chartingCost = chartingHrs * providerHr * annualDays * providers * mult;
+            document.getElementById('chartingCost').textContent = fmt(chartingCost);
+            document.getElementById('chartingCalc').textContent = `${chartingHrs}hr × $${providerHr}/hr × ${annualDays}days × ${providers}prov × ${mult}x = ${fmt(chartingCost)}`;
 
-            // Talk track scripts
-            document.getElementById('scriptPain').textContent=formatCurrency(d.totalPain);
-            document.getElementById('scriptPain3').textContent=formatCurrency(d.totalPain*3);
-            document.getElementById('scriptInvest').textContent=formatCurrency(d.year1Invest);
-            document.getElementById('scriptSavings').textContent=formatCurrency(d.totalSavings);
-            document.getElementById('scriptRoi').textContent=Math.round(d.roi)+'%';
-            document.getElementById('scriptPayback').textContent=d.paybackMonths>24?'24+':d.paybackMonths;
+            const pasPerWeek = getN('pasPerWeek',15);
+            const paMinutes = 45;
+            const paCost = (paMinutes/60) * staffHr * pasPerWeek * 52 * mult;
+            document.getElementById('paCost').textContent = fmt(paCost);
+            document.getElementById('paCalc').textContent = `${pasPerWeek}/wk × ${paMinutes}min × $${staffHr}/hr × 52wks × ${mult}x = ${fmt(paCost)}`;
 
-            // Bottom line
-            document.getElementById('blPain').textContent=formatCurrency(d.totalPain);
-            document.getElementById('blInvest').textContent=formatCurrency(d.year1Invest);
-            document.getElementById('blNet3').textContent=formatCurrency(d.netYear3);
+            const lookupMin = getN('lookupMin',8);
+            const lookupCost = (lookupMin/60) * staffHr * annualVisits * mult;
+            document.getElementById('lookupCost').textContent = fmt(lookupCost);
+            document.getElementById('lookupCalc').textContent = `${lookupMin}min × ${annualVisits.toLocaleString()}visits × $${staffHr}/hr × ${mult}x = ${fmt(lookupCost)}`;
+
+            const rxMin = getN('rxMin',45);
+            const rxCost = (rxMin/60) * staffHr * annualDays * mult;
+            document.getElementById('rxCost').textContent = fmt(rxCost);
+            document.getElementById('rxCalc').textContent = `${rxMin}min/day × ${annualDays}days × $${staffHr}/hr × ${mult}x = ${fmt(rxCost)}`;
+
+            const clinicalTotal = chartingCost + paCost + lookupCost + rxCost;
+            document.getElementById('clinicalTotal').textContent = fmt(clinicalTotal);
+
+            // === REVENUE CYCLE ===
+            const denialRate = getN('denialRate',8)/100;
+            const reworkCost = 35;
+            const denialCost = annualVisits * denialRate * mult * reworkCost;
+            document.getElementById('denialCost').textContent = fmt(denialCost);
+            document.getElementById('denialCalc').textContent = `${annualVisits.toLocaleString()}visits × ${(denialRate*100).toFixed(0)}% × ${mult}x × $${reworkCost}/rework = ${fmt(denialCost)}`;
+
+            const collectionRate = getN('collectionRate',92)/100;
+            const collectionGap = Math.max(0, 0.95 - collectionRate);
+            const collectionCost = annualRevenue * collectionGap;
+            document.getElementById('collectionCost').textContent = fmt(collectionCost);
+            document.getElementById('collectionCalc').textContent = `${fmt(annualRevenue)} × (95% - ${(collectionRate*100).toFixed(0)}%) = ${fmt(collectionCost)}`;
+
+            const missedPct = getN('missedCharges',2)/100;
+            const missedCost = annualRevenue * missedPct * mult;
+            document.getElementById('missedCost').textContent = fmt(missedCost);
+            document.getElementById('missedCalc').textContent = `${fmt(annualRevenue)} × ${(missedPct*100).toFixed(1)}% × ${mult}x = ${fmt(missedCost)}`;
+
+            const billingHrs = getN('billingHrs',15);
+            const billingStaff = Math.max(1, Math.ceil(staff * 0.15)); // ~15% of staff are billing
+            const billingCost = billingHrs * staffHr * 52 * billingStaff * mult;
+            document.getElementById('billingCost').textContent = fmt(billingCost);
+            document.getElementById('billingCalc').textContent = `${billingHrs}hr/wk × $${staffHr}/hr × 52wks × ${billingStaff}staff × ${mult}x = ${fmt(billingCost)}`;
+
+            const revenueTotal = denialCost + collectionCost + missedCost + billingCost;
+            document.getElementById('revenueTotal').textContent = fmt(revenueTotal);
+
+            // === PATIENT FLOW ===
+            const noShowRate = getN('noShowRate',12)/100;
+            const noShowCost = annualVisits * noShowRate * revenuePerVisit;
+            document.getElementById('noShowCost').textContent = fmt(noShowCost);
+            document.getElementById('noShowCalc').textContent = `${annualVisits.toLocaleString()}visits × ${(noShowRate*100).toFixed(0)}% × $${revenuePerVisit}/visit = ${fmt(noShowCost)}`;
+
+            const callsPerDay = getN('callsPerDay',50);
+            const callMin = 4;
+            const phoneCost = (callMin/60) * staffHr * callsPerDay * annualDays * mult;
+            document.getElementById('phoneCost').textContent = fmt(phoneCost);
+            document.getElementById('phoneCalc').textContent = `${callsPerDay}calls × ${callMin}min × ${annualDays}days × $${staffHr}/hr × ${mult}x = ${fmt(phoneCost)}`;
+
+            const checkinMin = getN('checkinMin',8);
+            const checkinCost = (checkinMin/60) * staffHr * annualVisits * mult;
+            document.getElementById('checkinCost').textContent = fmt(checkinCost);
+            document.getElementById('checkinCalc').textContent = `${checkinMin}min × ${annualVisits.toLocaleString()}visits × $${staffHr}/hr × ${mult}x = ${fmt(checkinCost)}`;
+
+            const verifyMin = getN('verifyMin',7);
+            const verifyPct = 0.8;
+            const verifyCost = (verifyMin/60) * staffHr * annualVisits * verifyPct * mult;
+            document.getElementById('verifyCost').textContent = fmt(verifyCost);
+            document.getElementById('verifyCalc').textContent = `${verifyMin}min × ${annualVisits.toLocaleString()}visits × 80% × $${staffHr}/hr × ${mult}x = ${fmt(verifyCost)}`;
+
+            const patientTotal = noShowCost + phoneCost + checkinCost + verifyCost;
+            document.getElementById('patientTotal').textContent = fmt(patientTotal);
+
+            // === COMPLIANCE ===
+            const mipsCurrent = parseFloat(document.getElementById('mipsCurrent').value)/100;
+            const mipsTarget = 0.03; // Target +3%
+            const mipsCost = annualRevenue * (mipsTarget - mipsCurrent);
+            document.getElementById('mipsCost').textContent = fmt(Math.abs(mipsCost));
+            document.getElementById('mipsCalc').textContent = `${fmt(annualRevenue)} × (3% - ${(mipsCurrent*100).toFixed(0)}%) = ${fmt(Math.abs(mipsCost))}`;
+
+            const itMonthly = getN('itMonthly',500);
+            const itCost = itMonthly * 12;
+            document.getElementById('itCost').textContent = fmt(itCost);
+            document.getElementById('itCalc').textContent = `$${itMonthly}/mo × 12 = ${fmt(itCost)}`;
+
+            const newHires = getN('newHires',2);
+            const trainingHrs = 30;
+            const trainingCost = newHires * trainingHrs * staffHr * mult;
+            document.getElementById('trainingCost').textContent = fmt(trainingCost);
+            document.getElementById('trainingCalc').textContent = `${newHires}hires × ${trainingHrs}hrs × $${staffHr}/hr × ${mult}x = ${fmt(trainingCost)}`;
+
+            const opsTotal = Math.abs(mipsCost) + itCost + trainingCost;
+            document.getElementById('opsTotal').textContent = fmt(opsTotal);
+
+            // === TOTAL PAIN ===
+            const totalPain = clinicalTotal + revenueTotal + patientTotal + opsTotal;
+            document.getElementById('totalPain').textContent = fmt(totalPain);
+            document.getElementById('pain3yr').textContent = fmt(totalPain * 3);
+
+            // === INVESTMENT ===
+            const mmProvider = getN('mmProvider',700);
+            const mmStaff = getN('mmStaff',100);
+            const mmImpl = getN('mmImpl',10000);
+            const mmSupport = getN('mmSupport',0);
+            const mmMonthly = (providers * mmProvider) + (staff * mmStaff);
+            const mmYear1 = (mmMonthly * 12) + mmImpl + mmSupport;
+            const mmOngoing = mmMonthly * 12;
+            document.getElementById('mmMonthly').textContent = fmt(mmMonthly);
+            document.getElementById('mmYear1').textContent = fmt(mmYear1);
+            document.getElementById('mmOngoing').textContent = fmt(mmOngoing);
+
+            // === SAVINGS ===
+            const impCharting = getN('impCharting',70)/100;
+            const impDenial = getN('impDenial',50)/100;
+            const impNoShow = getN('impNoShow',40)/100;
+            const impAdmin = getN('impAdmin',50)/100;
+            const impCharge = getN('impCharge',75)/100;
+            const impPA = getN('impPA',60)/100;
+
+            const saveClinical = (chartingCost * impCharting) + (paCost * impPA) + (lookupCost * impAdmin) + (rxCost * impAdmin);
+            const saveRevenue = (denialCost * impDenial) + (collectionCost * 0.5) + (missedCost * impCharge) + (billingCost * impAdmin);
+            const savePatient = (noShowCost * impNoShow) + (phoneCost * impAdmin) + (checkinCost * impAdmin) + (verifyCost * impAdmin);
+            const saveOps = mipsCost + (itCost * 0.3) + (trainingCost * 0.5);
+            const totalSavings = saveClinical + saveRevenue + savePatient + saveOps;
+
+            document.getElementById('totalSavings').textContent = fmt(totalSavings);
+            document.getElementById('savingsBreakdown').textContent = `Clinical ${fmt(saveClinical)} | Revenue ${fmt(saveRevenue)} | Flow ${fmt(savePatient)} | Ops ${fmt(saveOps)}`;
+
+            // === ROI ===
+            const netYear1 = totalSavings - mmYear1;
+            const netYear3 = netYear1 + ((totalSavings - mmOngoing) * 2);
+            const roi = mmYear1 > 0 ? (netYear1 / mmYear1) * 100 : 0;
+            const paybackMonths = (totalSavings/12) > 0 ? Math.ceil(mmYear1 / (totalSavings/12)) : 99;
+
+            document.getElementById('roi').textContent = Math.round(roi) + '%';
+            document.getElementById('payback').textContent = paybackMonths > 24 ? '24+' : paybackMonths;
+
+            // === TALK TRACK ===
+            document.getElementById('scriptPain').textContent = fmt(totalPain);
+            document.getElementById('scriptPain3').textContent = fmt(totalPain * 3);
+            document.getElementById('scriptCharting').textContent = Math.round(impCharting * 100) + '%';
+            document.getElementById('scriptDenial').textContent = Math.round(impDenial * 100) + '%';
+            document.getElementById('scriptNoShow').textContent = Math.round(impNoShow * 100) + '%';
+            document.getElementById('scriptInvest').textContent = fmt(mmYear1);
+            document.getElementById('scriptSave').textContent = fmt(totalSavings);
+            document.getElementById('scriptRoi').textContent = Math.round(roi) + '%';
+            document.getElementById('scriptPayback').textContent = paybackMonths > 24 ? '24+' : paybackMonths;
+
+            // === BOTTOM LINE ===
+            document.getElementById('blPain').textContent = fmt(totalPain);
+            document.getElementById('blInvest').textContent = fmt(mmYear1);
+            document.getElementById('blNet3').textContent = fmt(netYear3);
+
+            // Store for copy
+            window.data = {name:document.getElementById('practiceName').value||'Practice',providers,staff,annualRevenue,totalPain,totalSavings,mmYear1,netYear1,netYear3,roi,paybackMonths};
         }
 
         function resetAll(){
             document.getElementById('practiceName').value='';
-            document.getElementById('qPracticeName').value='';
-            document.getElementById('currentEHR').value='paper';
-            document.getElementById('qCurrentEHR').value='paper';
-            switchSpecialty(currentSpec);
+            document.getElementById('currentEHR').value='1.5';
+            switchSpecialty(current);
         }
 
         function copySummary(){
-            const d=window.calcData;
-            const s=`═══════════════════════════════════════════════════
-ModMed ROI Summary: ${d.name}
-═══════════════════════════════════════════════════
+            const d=window.data;
+            const s=`ModMed ROI Analysis: ${d.name}
+═══════════════════════════════════════
+Providers: ${d.providers} | Staff: ${d.staff}
+Annual Revenue: ${fmt(d.annualRevenue)}
 
-CURRENT STATE
-• EHR: ${d.ehr}
-• Providers: ${d.providers}
-• Est. Annual Revenue: ${formatCurrency(d.annualRevenue)}
+COST OF DOING NOTHING: ${fmt(d.totalPain)}/year
+3-Year Cost: ${fmt(d.totalPain*3)}
 
-COST OF DOING NOTHING
-• Clinical Workflow: ${formatCurrency(d.clinicalTotal)}
-• Revenue Cycle: ${formatCurrency(d.billingTotal)}
-• Patient Flow: ${formatCurrency(d.patientTotal)}
-• Compliance: ${formatCurrency(d.complianceTotal)}
-─────────────────────────────────────────
-TOTAL ANNUAL LOSS: ${formatCurrency(d.totalPain)}
-3-YEAR LOSS: ${formatCurrency(d.totalPain*3)}
-
-MODMED VALUE PROPOSITION
-• Year 1 Investment: ${formatCurrency(d.year1Invest)}
-• Projected Savings: ${formatCurrency(d.totalSavings)}
-• Net Year 1: ${formatCurrency(d.netYear1)}
-• Net 3-Year: ${formatCurrency(d.netYear3)}
-• ROI: ${Math.round(d.roi)}%
-• Payback: ${d.paybackMonths>24?'24+':d.paybackMonths} months
-
-═══════════════════════════════════════════════════`;
+MODMED INVESTMENT: ${fmt(d.mmYear1)} (Year 1)
+PROJECTED SAVINGS: ${fmt(d.totalSavings)}/year
+NET YEAR 1: ${fmt(d.netYear1)}
+NET 3-YEAR: ${fmt(d.netYear3)}
+ROI: ${Math.round(d.roi)}% | Payback: ${d.paybackMonths>24?'24+':d.paybackMonths} months
+═══════════════════════════════════════`;
             navigator.clipboard.writeText(s).then(()=>{
                 const btn=document.querySelector('.btn-primary');
                 btn.textContent='✓ Copied!';
-                btn.style.background='var(--green)';
-                setTimeout(()=>{btn.textContent='📋 Copy';btn.style.background=''},2000);
+                setTimeout(()=>btn.textContent='📋 Copy Summary',2000);
             });
         }
 
-        // Init
         switchSpecialty('plastic');
     </script>
 </body>
