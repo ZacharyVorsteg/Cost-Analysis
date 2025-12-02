@@ -68,9 +68,11 @@
         
         /* Derived Stats */
         .derived-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px;padding-top:20px;border-top:2px dashed var(--border)}
-        .derived-stat{text-align:center;padding:14px;background:linear-gradient(135deg,#f8fafc,#ffffff);border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 4px rgba(0,0,0,0.05)}
-        .derived-stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
+        .derived-stat{text-align:center;padding:16px 14px;background:linear-gradient(135deg,#f8fafc,#ffffff);border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 4px rgba(0,0,0,0.05)}
+        .derived-stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-bottom:6px}
         .derived-stat-value{font-size:20px;font-weight:800;margin-top:4px;color:var(--purple)}
+        .derived-stat-formula{font-size:9px;color:var(--text2);margin-top:8px;padding-top:8px;border-top:1px dashed var(--border);line-height:1.5;font-weight:500}
+        .derived-stat-formula strong{color:var(--purple);font-weight:700}
         
         /* Metric Row with Help */
         .metric-row-container{margin-bottom:4px}
@@ -213,7 +215,12 @@
             </div>
             <div class="step-body">
                 <div class="info-box green">
-                    <strong>🎯 Your Goal:</strong> These inputs determine annual patient volume and revenue. Use Sandler's pain discovery to uncover their real numbers!
+                    <strong>🎯 Discovery Questions You Need to Ask:</strong> 
+                    <br>• "How many providers do you have seeing patients?" → <strong>Providers</strong>
+                    <br>• "What's your typical patient volume per provider per day?" → <strong>Patients/Provider/Day</strong>
+                    <br>• "What's your average revenue per visit, including procedures?" → <strong>Avg Revenue/Visit</strong>
+                    <br>• "How many days per year are you open?" → <strong>Work Days/Year</strong>
+                    <br><br>📊 The calculations below will show you exactly how these create Annual Visits, Annual Revenue, and Active Patients!
                 </div>
                 
                 <div style="display:flex;gap:10px;margin-bottom:20px">
@@ -263,18 +270,22 @@
                     <div class="derived-stat">
                         <div class="derived-stat-label">Annual Visits</div>
                         <div class="derived-stat-value" id="annualVisits">0</div>
+                        <div class="derived-stat-formula" id="annualVisitsFormula"></div>
                     </div>
                     <div class="derived-stat">
                         <div class="derived-stat-label">Annual Revenue</div>
                         <div class="derived-stat-value" id="annualRevenue">$0</div>
+                        <div class="derived-stat-formula" id="annualRevenueFormula"></div>
                     </div>
                     <div class="derived-stat">
                         <div class="derived-stat-label">Active Patients</div>
                         <div class="derived-stat-value" id="activePatients">0</div>
+                        <div class="derived-stat-formula" id="activePatientsFormula"></div>
                     </div>
                     <div class="derived-stat">
                         <div class="derived-stat-label">Denial Cost/Claim</div>
                         <div class="derived-stat-value" id="denialCostPer">$45</div>
+                        <div class="derived-stat-formula">Industry standard cost to rework a denied claim</div>
                     </div>
                 </div>
             </div>
@@ -899,6 +910,11 @@
             document.getElementById('annualRevenue').textContent=fmt(revenue);
             document.getElementById('activePatients').textContent=patients.toLocaleString();
             document.getElementById('denialCostPer').textContent='$45';
+            
+            // Derived stat formulas
+            document.getElementById('annualVisitsFormula').innerHTML=`<strong>${prov}</strong> providers × <strong>${ppd}</strong> pts/provider/day × <strong>${days}</strong> days/year`;
+            document.getElementById('annualRevenueFormula').innerHTML=`<strong>${visits.toLocaleString()}</strong> annual visits × <strong>$${rpv}</strong>/visit`;
+            document.getElementById('activePatientsFormula').innerHTML=`<strong>${visits.toLocaleString()}</strong> visits ÷ <strong>3.5</strong> avg visits/patient/year`;
             
             let totalCost=0,totalSave=0;
             
