@@ -3,131 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ModMed Value Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>ModMed Sales Confidence Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root{--purple:#6B3FA0;--gold:#F5B335;--bg:#f5f5f7;--card:#fff;--text:#1a1a2e;--text2:#64748b;--muted:#94a3b8;--border:#e2e8f0;--red:#dc2626;--green:#16a34a;--blue:#2563eb;--orange:#ea580c}
+        :root{
+            --purple:#6B3FA0;
+            --gold:#F5B335;
+            --bg:#f5f5f7;
+            --card:#fff;
+            --text:#1a1a2e;
+            --text2:#64748b;
+            --muted:#94a3b8;
+            --border:#e2e8f0;
+            --red:#dc2626;
+            --green:#16a34a;
+            --blue:#2563eb;
+            --orange:#ea580c;
+            --shadow:0 2px 8px rgba(0,0,0,0.08);
+            --shadow-lg:0 4px 16px rgba(0,0,0,0.12);
+        }
         *{box-sizing:border-box;margin:0;padding:0}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
+        body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;padding-bottom:40px}
         
-        .header{background:var(--purple);color:#fff;padding:12px 16px;position:sticky;top:0;z-index:100}
-        .header-inner{max-width:960px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
-        .logo{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
-        .logo svg{width:28px;height:28px}
-        .btns{display:flex;gap:6px}
-        .btn{padding:8px 14px;border-radius:6px;font-size:11px;font-weight:600;border:none;cursor:pointer}
+        .header{background:linear-gradient(135deg,var(--purple),#8B5FC0);color:#fff;padding:16px 20px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-lg)}
+        .header-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+        .logo{font-weight:800;font-size:16px;display:flex;align-items:center;gap:10px}
+        .logo svg{width:32px;height:32px}
+        .btns{display:flex;gap:8px}
+        .btn{padding:10px 16px;border-radius:8px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.2s}
         .btn-light{background:rgba(255,255,255,.2);color:#fff}
+        .btn-light:hover{background:rgba(255,255,255,.3)}
         .btn-gold{background:var(--gold);color:#000}
+        .btn-gold:hover{background:#f7c255}
         
-        .main{max-width:960px;margin:0 auto;padding:16px}
+        .main{max-width:1100px;margin:0 auto;padding:24px 20px}
         
         /* Step Container */
-        .step{background:var(--card);border-radius:12px;margin-bottom:16px;overflow:hidden;border:1px solid var(--border)}
-        .step-header{padding:14px 16px;background:linear-gradient(to right,#f8fafc,#fff);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-        .step-num{width:28px;height:28px;background:var(--purple);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-right:10px}
-        .step-title{font-size:14px;font-weight:700;display:flex;align-items:center}
-        .step-subtitle{font-size:11px;color:var(--text2);margin-left:38px}
+        .step{background:var(--card);border-radius:16px;margin-bottom:24px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border)}
+        .step-header{padding:20px 24px;background:linear-gradient(to right,#f8fafc,#fff);border-bottom:2px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+        .step-num{width:36px;height:36px;background:var(--purple);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;margin-right:14px;box-shadow:0 2px 4px rgba(107,63,160,0.3)}
+        .step-title{font-size:18px;font-weight:700;display:flex;align-items:center;color:var(--text)}
+        .step-subtitle{font-size:12px;color:var(--text2);margin-left:50px;margin-top:4px}
         .step-total{text-align:right}
-        .step-total-label{font-size:10px;color:var(--muted);text-transform:uppercase}
-        .step-total-value{font-size:20px;font-weight:700}
+        .step-total-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
+        .step-total-value{font-size:28px;font-weight:800}
         .step-total-value.red{color:var(--red)}
         .step-total-value.green{color:var(--green)}
         .step-total-value.blue{color:var(--blue)}
-        .step-body{padding:16px}
+        .step-body{padding:24px}
         
         /* Info Box */
-        .info-box{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:11px;color:#92400e}
-        .info-box.blue{background:#eff6ff;border-color:#93c5fd;color:#1e40af}
-        .info-box strong{font-weight:600}
+        .info-box{background:#fffbeb;border:2px solid #fcd34d;border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:12px;color:#92400e;box-shadow:0 2px 4px rgba(252,211,77,0.2)}
+        .info-box.blue{background:#eff6ff;border-color:#93c5fd;color:#1e40af;box-shadow:0 2px 4px rgba(147,197,253,0.2)}
+        .info-box.green{background:#f0fdf4;border-color:#bbf7d0;color:#166534;box-shadow:0 2px 4px rgba(187,247,208,0.2)}
+        .info-box strong{font-weight:700}
         
         /* Input Grid */
-        .input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
-        .input-box{display:flex;flex-direction:column;gap:3px}
-        .input-box label{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase}
-        .input-box input,.input-box select{background:#f8fafc;border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:14px;font-weight:600}
-        .input-box input:focus,.input-box select:focus{outline:none;border-color:var(--purple);background:#fff}
-        .input-box .hint{font-size:9px;color:var(--blue);margin-top:2px}
+        .input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:20px}
+        .input-box{display:flex;flex-direction:column;gap:4px}
+        .input-box label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px}
+        .input-box input,.input-box select{background:#f8fafc;border:2px solid var(--border);border-radius:8px;padding:12px 14px;font-size:15px;font-weight:600;transition:all 0.2s}
+        .input-box input:focus,.input-box select:focus{outline:none;border-color:var(--purple);background:#fff;box-shadow:0 0 0 3px rgba(107,63,160,0.1)}
+        .input-box .hint{font-size:10px;color:var(--blue);margin-top:2px;font-weight:500}
         
         /* Derived Stats */
-        .derived-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)}
-        .derived-stat{text-align:center;padding:8px;background:#f8fafc;border-radius:6px}
-        .derived-stat-label{font-size:9px;color:var(--muted);text-transform:uppercase}
-        .derived-stat-value{font-size:16px;font-weight:700;margin-top:2px}
+        .derived-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px;padding-top:20px;border-top:2px dashed var(--border)}
+        .derived-stat{text-align:center;padding:14px;background:linear-gradient(135deg,#f8fafc,#ffffff);border-radius:10px;border:1px solid var(--border);box-shadow:0 2px 4px rgba(0,0,0,0.05)}
+        .derived-stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600}
+        .derived-stat-value{font-size:20px;font-weight:800;margin-top:4px;color:var(--purple)}
         
-        /* Metric Table */
-        .metric-table{width:100%;border-collapse:collapse}
-        .metric-table th{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;padding:10px 8px;text-align:center;background:#f8fafc;border-bottom:1px solid var(--border)}
-        .metric-table th:first-child{text-align:left;width:30%}
-        .metric-table th.current{color:var(--red)}
-        .metric-table th.modmed{color:var(--green)}
-        .metric-table th.savings{color:var(--blue)}
-        .metric-table td{padding:12px 8px;border-bottom:1px solid #f1f5f9;vertical-align:top}
-        .metric-table td:first-child{text-align:left}
-        .metric-table td:not(:first-child){text-align:center}
-        .metric-table tr:last-child td{border-bottom:none}
+        /* Metric Row with Help */
+        .metric-row-container{margin-bottom:4px}
+        .metric-main-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 50px;gap:12px;padding:16px;background:#fff;border-radius:10px;align-items:center;border:2px solid transparent;transition:all 0.2s}
+        .metric-main-row:hover{border-color:var(--purple);box-shadow:var(--shadow)}
         
-        .metric-name{font-weight:600;font-size:13px}
-        .metric-desc{font-size:10px;color:var(--text2);margin-top:2px}
-        .metric-formula{font-size:9px;color:var(--muted);margin-top:4px;font-style:italic}
+        .metric-name-section{padding-right:12px;border-right:2px solid var(--border)}
+        .metric-icon{font-size:20px;margin-bottom:4px}
+        .metric-name{font-weight:700;font-size:14px;color:var(--text);margin-bottom:2px}
+        .metric-desc{font-size:11px;color:var(--text2);line-height:1.4}
         
-        .metric-input{width:70px;padding:8px;border:1px solid var(--border);border-radius:5px;font-size:13px;font-weight:600;text-align:center}
-        .metric-input:focus{outline:none;border-color:var(--purple)}
+        .metric-col{text-align:center}
+        .metric-col-label{font-size:9px;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:4px;display:block}
+        .metric-input{width:100%;padding:10px;border:2px solid var(--border);border-radius:8px;font-size:14px;font-weight:700;text-align:center;transition:all 0.2s}
+        .metric-input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(107,63,160,0.1)}
         .metric-input.red{background:#fef2f2;border-color:#fecaca;color:var(--red)}
         .metric-input.green{background:#f0fdf4;border-color:#bbf7d0;color:var(--green)}
         
-        .metric-cost{font-size:14px;font-weight:700;color:var(--red)}
-        .metric-target{font-size:14px;font-weight:600;color:var(--green)}
-        .metric-save{font-size:14px;font-weight:700;color:var(--blue)}
+        .metric-value{font-size:16px;font-weight:800;display:block}
+        .metric-value.red{color:var(--red)}
+        .metric-value.green{color:var(--green)}
+        .metric-value.blue{color:var(--blue)}
+        
+        .help-toggle{background:var(--purple);color:#fff;border:none;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:18px;font-weight:700;transition:all 0.2s;box-shadow:0 2px 4px rgba(107,63,160,0.3)}
+        .help-toggle:hover{background:#8B5FC0;transform:scale(1.05)}
+        .help-toggle.active{background:var(--gold);color:#000}
+        
+        /* Help Panel */
+        .help-panel{display:none;background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:2px solid #93c5fd;border-radius:12px;padding:20px;margin:8px 0 16px 0;box-shadow:0 4px 12px rgba(37,99,235,0.15)}
+        .help-panel.active{display:block;animation:slideDown 0.3s ease}
+        @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+        
+        .help-section{margin-bottom:20px}
+        .help-section:last-child{margin-bottom:0}
+        .help-title{font-size:13px;font-weight:800;color:var(--purple);margin-bottom:10px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:0.5px}
+        .help-questions{background:#fff;border-radius:8px;padding:14px;border-left:4px solid var(--purple)}
+        .help-question{font-size:12px;color:var(--text);margin-bottom:8px;padding-left:20px;position:relative;line-height:1.6}
+        .help-question:before{content:"→";position:absolute;left:0;color:var(--purple);font-weight:700}
+        .help-question:last-child{margin-bottom:0}
+        .help-impact{background:var(--gold);color:#000;border-radius:8px;padding:12px;font-size:11px;font-weight:600;margin-top:10px}
+        .help-impact strong{font-weight:800;color:var(--purple)}
         
         /* Subtotal Row */
-        .subtotal-row{background:#f8fafc;border-top:2px solid var(--border)}
-        .subtotal-row td{padding:14px 8px;font-weight:700}
-        .subtotal-row .metric-name{font-size:12px;text-transform:uppercase;color:var(--text2)}
+        .subtotal-row{background:linear-gradient(135deg,#f8fafc,#ffffff);border-radius:12px;padding:20px;margin-top:20px;border:2px solid var(--border);box-shadow:var(--shadow)}
+        .subtotal-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:20px;align-items:center}
+        .subtotal-label{font-size:14px;font-weight:800;text-transform:uppercase;color:var(--text2);letter-spacing:0.5px}
+        .subtotal-value{font-size:24px;font-weight:800;text-align:center}
+        .subtotal-value.red{color:var(--red)}
+        .subtotal-value.blue{color:var(--blue)}
         
         /* Summary Cards */
-        .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-        .summary-card{text-align:center;padding:16px 10px;border-radius:10px}
-        .summary-card.pain{background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fecaca}
-        .summary-card.save{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0}
-        .summary-card.roi{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #93c5fd}
-        .summary-card.net{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d}
-        .summary-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+        .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+        .summary-card{text-align:center;padding:24px 16px;border-radius:14px;box-shadow:var(--shadow-lg);transition:transform 0.2s}
+        .summary-card:hover{transform:translateY(-2px)}
+        .summary-card.pain{background:linear-gradient(135deg,#fef2f2,#fee2e2);border:2px solid #fecaca}
+        .summary-card.save{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #bbf7d0}
+        .summary-card.roi{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:2px solid #93c5fd}
+        .summary-card.net{background:linear-gradient(135deg,#fffbeb,#fef3c7);border:2px solid #fcd34d}
+        .summary-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
         .summary-card.pain .summary-label{color:var(--red)}
         .summary-card.save .summary-label{color:var(--green)}
         .summary-card.roi .summary-label{color:var(--blue)}
         .summary-card.net .summary-label{color:var(--orange)}
-        .summary-value{font-size:24px;font-weight:700;margin:6px 0}
+        .summary-value{font-size:32px;font-weight:800;margin:10px 0}
         .summary-card.pain .summary-value{color:var(--red)}
         .summary-card.save .summary-value{color:var(--green)}
         .summary-card.roi .summary-value{color:var(--blue)}
         .summary-card.net .summary-value{color:var(--orange)}
-        .summary-sub{font-size:10px;color:var(--text2)}
+        .summary-sub{font-size:11px;color:var(--text2);font-weight:500}
         
         /* Investment Card */
-        .invest-card{background:var(--purple);color:#fff;border-radius:10px;padding:16px}
-        .invest-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;text-align:center}
-        .invest-item label{font-size:9px;opacity:.8;display:block;margin-bottom:4px}
-        .invest-item input{width:80px;padding:8px;border:1px solid rgba(255,255,255,.3);border-radius:5px;background:rgba(255,255,255,.1);color:#fff;font-size:13px;font-weight:600;text-align:center}
-        .invest-item input::placeholder{color:rgba(255,255,255,.5)}
-        .invest-value{font-size:20px;font-weight:700;margin-top:4px}
+        .invest-card{background:linear-gradient(135deg,var(--purple),#8B5FC0);color:#fff;border-radius:14px;padding:24px;box-shadow:var(--shadow-lg)}
+        .invest-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;text-align:center}
+        .invest-item label{font-size:10px;opacity:.9;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+        .invest-item input{width:100%;padding:10px;border:2px solid rgba(255,255,255,.3);border-radius:8px;background:rgba(255,255,255,.15);color:#fff;font-size:14px;font-weight:700;text-align:center}
+        .invest-item input::placeholder{color:rgba(255,255,255,.6)}
+        .invest-value{font-size:24px;font-weight:800;margin-top:6px}
         
         /* Talk Track */
-        .talk-section{background:var(--gold);border-radius:10px;padding:16px;margin-top:16px}
-        .talk-title{font-size:13px;font-weight:700;margin-bottom:12px}
-        .talk-item{background:#fff;border-radius:8px;padding:12px;margin-bottom:8px}
+        .talk-section{background:linear-gradient(135deg,var(--gold),#f7c255);border-radius:14px;padding:24px;margin-top:24px;box-shadow:var(--shadow-lg)}
+        .talk-title{font-size:16px;font-weight:800;margin-bottom:16px;color:#000;display:flex;align-items:center;gap:8px}
+        .talk-item{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,0.1);border:2px solid rgba(0,0,0,0.05)}
         .talk-item:last-child{margin-bottom:0}
-        .talk-step{display:inline-flex;width:20px;height:20px;align-items:center;justify-content:center;background:var(--purple);color:#fff;border-radius:50%;font-size:10px;font-weight:700;margin-right:8px}
-        .talk-label{font-size:11px;font-weight:600}
-        .talk-script{font-size:11px;color:var(--text2);margin-top:6px;padding:8px;background:var(--bg);border-radius:6px;border-left:3px solid var(--purple);line-height:1.6}
-        .talk-script strong{color:var(--purple)}
+        .talk-step{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;background:var(--purple);color:#fff;border-radius:50%;font-size:12px;font-weight:700;margin-right:10px;box-shadow:0 2px 4px rgba(107,63,160,0.3)}
+        .talk-label{font-size:13px;font-weight:700;color:var(--text)}
+        .talk-script{font-size:12px;color:var(--text2);margin-top:8px;padding:12px;background:var(--bg);border-radius:8px;border-left:4px solid var(--purple);line-height:1.7}
+        .talk-script strong{color:var(--purple);font-weight:700}
         
-        @media(max-width:700px){
-            .input-grid{grid-template-columns:1fr 1fr}
-            .derived-row{grid-template-columns:1fr 1fr}
-            .summary-grid{grid-template-columns:1fr 1fr}
-            .invest-grid{grid-template-columns:1fr 1fr}
-            .metric-table{font-size:11px}
-            .metric-input{width:55px;padding:6px}
+        /* Discovery Checklist */
+        .discovery-section{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-radius:14px;padding:28px;margin-top:24px;box-shadow:var(--shadow-lg);border:2px solid #93c5fd}
+        .discovery-header{text-align:center;margin-bottom:24px}
+        .discovery-title{font-size:20px;font-weight:800;color:var(--purple);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:10px}
+        .discovery-subtitle{font-size:13px;color:var(--text2);font-weight:500}
+        .discovery-script{background:var(--gold);color:#000;border-radius:12px;padding:16px;margin-bottom:24px;text-align:center;font-size:13px;font-weight:600;line-height:1.7;border:2px solid #f7c255;box-shadow:0 2px 6px rgba(245,179,53,0.3)}
+        .discovery-script strong{font-weight:800;color:var(--purple)}
+        
+        .discovery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+        .discovery-category{background:#fff;border-radius:12px;padding:20px;box-shadow:var(--shadow);border:2px solid var(--border)}
+        .discovery-category-title{font-size:14px;font-weight:800;color:var(--purple);margin-bottom:14px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:0.5px}
+        .discovery-question{font-size:12px;color:var(--text);margin-bottom:10px;padding:10px;background:var(--bg);border-radius:6px;line-height:1.6;border-left:3px solid var(--purple);font-weight:500}
+        .discovery-question:last-child{margin-bottom:0}
+        
+        @media(max-width:900px){
+            .input-grid{grid-template-columns:repeat(2,1fr)}
+            .derived-row{grid-template-columns:repeat(2,1fr)}
+            .summary-grid{grid-template-columns:repeat(2,1fr)}
+            .invest-grid{grid-template-columns:repeat(2,1fr)}
+            .discovery-grid{grid-template-columns:1fr}
+            .metric-main-row{grid-template-columns:1fr;gap:10px}
+            .metric-name-section{border-right:none;border-bottom:2px solid var(--border);padding-bottom:12px}
         }
     </style>
 </head>
@@ -136,7 +189,7 @@
         <div class="header-inner">
             <div class="logo">
                 <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#8C8C8C"/><circle cx="50" cy="50" r="44" fill="#F5B335"/><ellipse cx="50" cy="75" rx="44" ry="25" fill="#6B3FA0"/><path d="M15 50 L30 50 L38 25 L50 70 L62 30 L70 50 L85 50" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                ModMed Value Calculator
+                ModMed Sales Confidence Tool
             </div>
             <div class="btns">
                 <button class="btn btn-light" onclick="resetAll()">Reset</button>
@@ -151,17 +204,17 @@
             <div class="step-header">
                 <div>
                     <div class="step-title"><span class="step-num">1</span>Practice Profile</div>
-                    <div class="step-subtitle">Enter your practice details to calculate baseline metrics</div>
+                    <div class="step-subtitle">Enter practice details to establish baseline metrics</div>
                 </div>
             </div>
             <div class="step-body">
-                <div class="info-box">
-                    <strong>💡 Why this matters:</strong> These inputs determine your annual patient volume and revenue, which drive all cost and savings calculations.
+                <div class="info-box green">
+                    <strong>🎯 Your Goal:</strong> These inputs determine annual patient volume and revenue. Use Sandler's pain discovery to uncover their real numbers!
                 </div>
                 
-                <div style="display:flex;gap:8px;margin-bottom:14px">
-                    <button class="btn" style="flex:1;background:var(--purple);color:#fff" onclick="setSpec('plastic')" id="sp-plastic">Plastic Surgery</button>
-                    <button class="btn" style="flex:1;background:var(--bg);color:var(--text)" onclick="setSpec('allergy')" id="sp-allergy">Allergy/Immunology</button>
+                <div style="display:flex;gap:10px;margin-bottom:20px">
+                    <button class="btn" style="flex:1;background:var(--purple);color:#fff;font-size:13px;padding:12px" onclick="setSpec('plastic')" id="sp-plastic">Plastic Surgery</button>
+                    <button class="btn" style="flex:1;background:var(--bg);color:var(--text);font-size:13px;padding:12px" onclick="setSpec('allergy')" id="sp-allergy">Allergy/Immunology</button>
                 </div>
                 
                 <div class="input-grid">
@@ -222,8 +275,8 @@
         <div class="step">
             <div class="step-header">
                 <div>
-                    <div class="step-title"><span class="step-num">2</span>Current State vs. ModMed</div>
-                    <div class="step-subtitle">Enter your current metrics and see projected improvements</div>
+                    <div class="step-title"><span class="step-num">2</span>Pain Discovery & Value Mapping</div>
+                    <div class="step-subtitle">Click "?" on each metric to see Sandler questions and impact calculations</div>
                 </div>
                 <div class="step-total">
                     <div class="step-total-label">Total Annual Savings</div>
@@ -232,121 +285,345 @@
             </div>
             <div class="step-body">
                 <div class="info-box blue">
-                    <strong>📊 How to read this table:</strong> Enter YOUR current numbers in the red column. Adjust ModMed targets in the green column based on your expectations. Savings calculate automatically.
+                    <strong>📊 How This Works:</strong> Enter THEIR numbers (red = pain). Adjust ModMed targets (green = solution). Click <strong>?</strong> for Sandler questions that uncover each pain point!
                 </div>
                 
-                <table class="metric-table">
-                    <thead>
-                        <tr>
-                            <th>Metric</th>
-                            <th class="current">Your Current State</th>
-                            <th>Annual Cost</th>
-                            <th class="modmed">With ModMed</th>
-                            <th class="savings">Annual Savings</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- CHARTING -->
-                        <tr>
-                            <td>
-                                <div class="metric-name">📝 After-Hours Charting</div>
-                                <div class="metric-desc">Provider documentation time outside patient hours</div>
-                                <div class="metric-formula" id="chartingFormula"></div>
-                            </td>
-                            <td><input type="number" class="metric-input red" id="chartingCurr" value="1.5" step="0.5" oninput="calc()"> hrs/day</td>
-                            <td><span class="metric-cost" id="chartingCost">$0</span></td>
-                            <td><input type="number" class="metric-input green" id="chartingTarget" value="0.5" step="0.5" oninput="calc()"> hrs/day</td>
-                            <td><span class="metric-save" id="chartingSave">$0</span></td>
-                        </tr>
-                        
-                        <!-- NO-SHOWS -->
-                        <tr>
-                            <td>
-                                <div class="metric-name">📅 No-Show Rate</div>
-                                <div class="metric-desc">Missed appointments = lost revenue</div>
-                                <div class="metric-formula" id="noshowFormula"></div>
-                            </td>
-                            <td><input type="number" class="metric-input red" id="noshowCurr" value="18" oninput="calc()">%</td>
-                            <td><span class="metric-cost" id="noshowCost">$0</span></td>
-                            <td><input type="number" class="metric-input green" id="noshowTarget" value="8" oninput="calc()">%</td>
-                            <td><span class="metric-save" id="noshowSave">$0</span></td>
-                        </tr>
-                        
-                        <!-- COLLECTIONS -->
-                        <tr>
-                            <td>
-                                <div class="metric-name">💵 Collection Rate</div>
-                                <div class="metric-desc">% of billable revenue actually collected</div>
-                                <div class="metric-formula" id="collFormula"></div>
-                            </td>
-                            <td><input type="number" class="metric-input red" id="collCurr" value="89" oninput="calc()">%</td>
-                            <td><span class="metric-cost" id="collCost">$0</span></td>
-                            <td><input type="number" class="metric-input green" id="collTarget" value="95" oninput="calc()">%</td>
-                            <td><span class="metric-save" id="collSave">$0</span></td>
-                        </tr>
-                        
-                        <!-- DENIALS -->
-                        <tr>
-                            <td>
-                                <div class="metric-name">❌ Claim Denial Rate</div>
-                                <div class="metric-desc">Rejected claims requiring rework</div>
-                                <div class="metric-formula" id="denialFormula"></div>
-                            </td>
-                            <td><input type="number" class="metric-input red" id="denialCurr" value="12" oninput="calc()">%</td>
-                            <td><span class="metric-cost" id="denialCost">$0</span></td>
-                            <td><input type="number" class="metric-input green" id="denialTarget" value="5" oninput="calc()">%</td>
-                            <td><span class="metric-save" id="denialSave">$0</span></td>
-                        </tr>
-                        
-                        <!-- CHARGE CAPTURE -->
-                        <tr>
-                            <td>
-                                <div class="metric-name">💰 Charge Capture</div>
-                                <div class="metric-desc">% of services properly billed</div>
-                                <div class="metric-formula" id="captureFormula"></div>
-                            </td>
-                            <td><input type="number" class="metric-input red" id="captureCurr" value="94" oninput="calc()">%</td>
-                            <td><span class="metric-cost" id="captureCost">$0</span></td>
-                            <td><input type="number" class="metric-input green" id="captureTarget" value="99" oninput="calc()">%</td>
-                            <td><span class="metric-save" id="captureSave">$0</span></td>
-                        </tr>
-                        
-                        <!-- PHONE VOLUME -->
-                        <tr>
-                            <td>
-                                <div class="metric-name">📞 Phone Call Volume</div>
-                                <div class="metric-desc">Staff time handling calls (4 min avg)</div>
-                                <div class="metric-formula" id="phoneFormula"></div>
-                            </td>
-                            <td><input type="number" class="metric-input red" id="phoneCurr" value="60" oninput="calc()"> calls/day</td>
-                            <td><span class="metric-cost" id="phoneCost">$0</span></td>
-                            <td><input type="number" class="metric-input green" id="phoneTarget" value="35" oninput="calc()"> calls/day</td>
-                            <td><span class="metric-save" id="phoneSave">$0</span></td>
-                        </tr>
-                        
-                        <!-- RETENTION -->
-                        <tr>
-                            <td>
-                                <div class="metric-name">🔄 Patient Retention</div>
-                                <div class="metric-desc">% returning within 18 months</div>
-                                <div class="metric-formula" id="retFormula"></div>
-                            </td>
-                            <td><input type="number" class="metric-input red" id="retCurr" value="72" oninput="calc()">%</td>
-                            <td><span class="metric-cost" id="retCost">$0</span><span style="font-size:9px;color:var(--muted)"> lost</span></td>
-                            <td><input type="number" class="metric-input green" id="retTarget" value="85" oninput="calc()">%</td>
-                            <td><span class="metric-save" id="retSave">$0</span></td>
-                        </tr>
-                        
-                        <!-- SUBTOTAL -->
-                        <tr class="subtotal-row">
-                            <td><div class="metric-name">SUBTOTAL</div></td>
-                            <td></td>
-                            <td><span class="metric-cost" id="subtotalCost">$0</span></td>
-                            <td></td>
-                            <td><span class="metric-save" id="subtotalSave">$0</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- CHARTING -->
+                <div class="metric-row-container">
+                    <div class="metric-main-row">
+                        <div class="metric-name-section">
+                            <div class="metric-icon">📝</div>
+                            <div class="metric-name">After-Hours Charting</div>
+                            <div class="metric-desc">Provider documentation time beyond patient hours</div>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--red)">Current State</span>
+                            <input type="number" class="metric-input red" id="chartingCurr" value="1.5" step="0.1" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">hrs/day</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label">Annual Cost</span>
+                            <span class="metric-value red" id="chartingCost">$0</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
+                            <input type="number" class="metric-input green" id="chartingTarget" value="0.5" step="0.1" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">hrs/day</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--blue)">Savings</span>
+                            <span class="metric-value blue" id="chartingSave">$0</span>
+                        </div>
+                        <div>
+                            <button class="help-toggle" onclick="toggleHelp('charting')">?</button>
+                        </div>
+                    </div>
+                    <div class="help-panel" id="help-charting">
+                        <div class="help-section">
+                            <div class="help-title">🎯 Sandler Discovery Questions</div>
+                            <div class="help-questions">
+                                <div class="help-question">"Walk me through what happens after your last patient leaves. What does your evening look like?"</div>
+                                <div class="help-question">"How long are you typically spending on documentation after hours? Every night?"</div>
+                                <div class="help-question">"What's that costing you in terms of family time, burnout, or provider satisfaction?"</div>
+                                <div class="help-question">"If you could cut that time in half, what would that mean to you personally?"</div>
+                            </div>
+                            <div class="help-impact">
+                                <strong>💰 Bottom-Line Impact:</strong> Each hour saved = $200 in opportunity cost (seeing more patients or personal time). Formula: <strong>Hours × $200/hr × Work Days × Providers</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NO-SHOWS -->
+                <div class="metric-row-container">
+                    <div class="metric-main-row">
+                        <div class="metric-name-section">
+                            <div class="metric-icon">📅</div>
+                            <div class="metric-name">No-Show Rate</div>
+                            <div class="metric-desc">Missed appointments = lost revenue opportunity</div>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--red)">Current State</span>
+                            <input type="number" class="metric-input red" id="noshowCurr" value="18" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">%</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label">Annual Cost</span>
+                            <span class="metric-value red" id="noshowCost">$0</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
+                            <input type="number" class="metric-input green" id="noshowTarget" value="8" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">%</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--blue)">Savings</span>
+                            <span class="metric-value blue" id="noshowSave">$0</span>
+                        </div>
+                        <div>
+                            <button class="help-toggle" onclick="toggleHelp('noshow')">?</button>
+                        </div>
+                    </div>
+                    <div class="help-panel" id="help-noshow">
+                        <div class="help-section">
+                            <div class="help-title">🎯 Sandler Discovery Questions</div>
+                            <div class="help-questions">
+                                <div class="help-question">"What percentage of your scheduled patients actually show up? What's that number costing you?"</div>
+                                <div class="help-question">"When someone no-shows, can you fill that slot? Or is that revenue just... gone?"</div>
+                                <div class="help-question">"How do you currently remind patients about appointments? Is it working?"</div>
+                                <div class="help-question">"What would an extra 10% of kept appointments mean to your bottom line?"</div>
+                            </div>
+                            <div class="help-impact">
+                                <strong>💰 Bottom-Line Impact:</strong> Every 1% reduction = revenue per visit × annual visits × 1%. Formula: <strong>Annual Visits × No-Show % × Revenue/Visit</strong>. ModMed's automated reminders (SMS, email, app) reduce no-shows by 50-60%.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLLECTIONS -->
+                <div class="metric-row-container">
+                    <div class="metric-main-row">
+                        <div class="metric-name-section">
+                            <div class="metric-icon">💵</div>
+                            <div class="metric-name">Collection Rate</div>
+                            <div class="metric-desc">% of billable revenue actually collected</div>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--red)">Current State</span>
+                            <input type="number" class="metric-input red" id="collCurr" value="89" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">%</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label">Annual Cost</span>
+                            <span class="metric-value red" id="collCost">$0</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
+                            <input type="number" class="metric-input green" id="collTarget" value="95" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">%</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--blue)">Savings</span>
+                            <span class="metric-value blue" id="collSave">$0</span>
+                        </div>
+                        <div>
+                            <button class="help-toggle" onclick="toggleHelp('coll')">?</button>
+                        </div>
+                    </div>
+                    <div class="help-panel" id="help-coll">
+                        <div class="help-section">
+                            <div class="help-title">🎯 Sandler Discovery Questions</div>
+                            <div class="help-questions">
+                                <div class="help-question">"For every dollar you bill, how much are you actually collecting? Do you know that number?"</div>
+                                <div class="help-question">"What's happening to that uncollected revenue? Is it bad debt, write-offs, or just falling through the cracks?"</div>
+                                <div class="help-question">"How long does it take you to collect payment? 30 days? 60? 90?"</div>
+                                <div class="help-question">"What would an extra 5-6% in collections do for your practice?"</div>
+                            </div>
+                            <div class="help-impact">
+                                <strong>💰 Bottom-Line Impact:</strong> Each 1% improvement = 1% of total revenue. Formula: <strong>Annual Revenue × (Target % - Current %)</strong>. ModMed's integrated billing with real-time eligibility and patient payment options improves collections 5-8%.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DENIALS -->
+                <div class="metric-row-container">
+                    <div class="metric-main-row">
+                        <div class="metric-name-section">
+                            <div class="metric-icon">❌</div>
+                            <div class="metric-name">Claim Denial Rate</div>
+                            <div class="metric-desc">Rejected claims requiring staff rework</div>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--red)">Current State</span>
+                            <input type="number" class="metric-input red" id="denialCurr" value="12" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">%</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label">Annual Cost</span>
+                            <span class="metric-value red" id="denialCost">$0</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
+                            <input type="number" class="metric-input green" id="denialTarget" value="5" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">%</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--blue)">Savings</span>
+                            <span class="metric-value blue" id="denialSave">$0</span>
+                        </div>
+                        <div>
+                            <button class="help-toggle" onclick="toggleHelp('denial')">?</button>
+                        </div>
+                    </div>
+                    <div class="help-panel" id="help-denial">
+                        <div class="help-section">
+                            <div class="help-title">🎯 Sandler Discovery Questions</div>
+                            <div class="help-questions">
+                                <div class="help-question">"What percentage of your claims get denied on first submission?"</div>
+                                <div class="help-question">"When a claim gets denied, who handles that? How much time does rework take?"</div>
+                                <div class="help-question">"What are the most common denial reasons? Eligibility? Coding? Documentation?"</div>
+                                <div class="help-question">"How much is staff time on denials costing you monthly?"</div>
+                            </div>
+                            <div class="help-impact">
+                                <strong>💰 Bottom-Line Impact:</strong> Industry avg: $45 per denial (staff time + lost revenue). Formula: <strong>Annual Visits × Denial % × $45/denial</strong>. ModMed's built-in coding suggestions and real-time eligibility reduce denials 50-70%.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHARGE CAPTURE -->
+                <div class="metric-row-container">
+                    <div class="metric-main-row">
+                        <div class="metric-name-section">
+                            <div class="metric-icon">💰</div>
+                            <div class="metric-name">Charge Capture</div>
+                            <div class="metric-desc">% of services properly documented & billed</div>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--red)">Current State</span>
+                            <input type="number" class="metric-input red" id="captureCurr" value="94" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">%</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label">Annual Cost</span>
+                            <span class="metric-value red" id="captureCost">$0</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
+                            <input type="number" class="metric-input green" id="captureTarget" value="99" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">%</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--blue)">Savings</span>
+                            <span class="metric-value blue" id="captureSave">$0</span>
+                        </div>
+                        <div>
+                            <button class="help-toggle" onclick="toggleHelp('capture')">?</button>
+                        </div>
+                    </div>
+                    <div class="help-panel" id="help-capture">
+                        <div class="help-section">
+                            <div class="help-title">🎯 Sandler Discovery Questions</div>
+                            <div class="help-questions">
+                                <div class="help-question">"Are you confident you're billing for every service you provide? Every procedure?"</div>
+                                <div class="help-question">"Do providers ever forget to document something they did? How often?"</div>
+                                <div class="help-question">"What's your process for making sure charges are captured before the patient leaves?"</div>
+                                <div class="help-question">"If you're missing even 5% of charges, what's that costing you annually?"</div>
+                            </div>
+                            <div class="help-impact">
+                                <strong>💰 Bottom-Line Impact:</strong> Missing charges = lost revenue forever. Formula: <strong>Annual Revenue × (100% - Current %)</strong>. ModMed's specialty-specific templates ensure nothing gets missed. Even 3-5% improvement = huge gains.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PHONE VOLUME -->
+                <div class="metric-row-container">
+                    <div class="metric-main-row">
+                        <div class="metric-name-section">
+                            <div class="metric-icon">📞</div>
+                            <div class="metric-name">Phone Call Volume</div>
+                            <div class="metric-desc">Staff time handling patient calls (avg 4 min/call)</div>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--red)">Current State</span>
+                            <input type="number" class="metric-input red" id="phoneCurr" value="60" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">calls/day</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label">Annual Cost</span>
+                            <span class="metric-value red" id="phoneCost">$0</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
+                            <input type="number" class="metric-input green" id="phoneTarget" value="35" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">calls/day</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--blue)">Savings</span>
+                            <span class="metric-value blue" id="phoneSave">$0</span>
+                        </div>
+                        <div>
+                            <button class="help-toggle" onclick="toggleHelp('phone')">?</button>
+                        </div>
+                    </div>
+                    <div class="help-panel" id="help-phone">
+                        <div class="help-section">
+                            <div class="help-title">🎯 Sandler Discovery Questions</div>
+                            <div class="help-questions">
+                                <div class="help-question">"How many calls is your front desk taking daily? What are most of them about?"</div>
+                                <div class="help-question">"Scheduling? Prescriptions? Test results? Questions that could be handled online?"</div>
+                                <div class="help-question">"How much time is your staff spending on the phone versus higher-value tasks?"</div>
+                                <div class="help-question">"What if patients could book appointments, request refills, and message providers online?"</div>
+                            </div>
+                            <div class="help-impact">
+                                <strong>💰 Bottom-Line Impact:</strong> Formula: <strong>Daily Calls × 4 min × Staff Rate × Work Days</strong>. ModMed's patient portal handles 40-50% of routine calls automatically (scheduling, forms, refills, messages).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RETENTION -->
+                <div class="metric-row-container">
+                    <div class="metric-main-row">
+                        <div class="metric-name-section">
+                            <div class="metric-icon">🔄</div>
+                            <div class="metric-name">Patient Retention</div>
+                            <div class="metric-desc">% returning within 18 months (lifetime value)</div>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--red)">Current State</span>
+                            <input type="number" class="metric-input red" id="retCurr" value="72" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">%</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label">Annual Cost</span>
+                            <span class="metric-value red" id="retCost">$0</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--green)">With ModMed</span>
+                            <input type="number" class="metric-input green" id="retTarget" value="85" oninput="calc()">
+                            <span style="font-size:10px;color:var(--muted)">%</span>
+                        </div>
+                        <div class="metric-col">
+                            <span class="metric-col-label" style="color:var(--blue)">Savings</span>
+                            <span class="metric-value blue" id="retSave">$0</span>
+                        </div>
+                        <div>
+                            <button class="help-toggle" onclick="toggleHelp('retention')">?</button>
+                        </div>
+                    </div>
+                    <div class="help-panel" id="help-retention">
+                        <div class="help-section">
+                            <div class="help-title">🎯 Sandler Discovery Questions</div>
+                            <div class="help-questions">
+                                <div class="help-question">"What percentage of your patients come back? Do you track that?"</div>
+                                <div class="help-question">"When patients leave, where do they go? What's driving them away?"</div>
+                                <div class="help-question">"How much does it cost you to acquire a new patient versus keeping an existing one?"</div>
+                                <div class="help-question">"What does patient experience look like? Modern? Seamless? Or... frustrating?"</div>
+                            </div>
+                            <div class="help-impact">
+                                <strong>💰 Bottom-Line Impact:</strong> Lost patients = lost lifetime value (avg 3 visits/year). Formula: <strong>Active Patients × % Lost × Lifetime Value</strong>. ModMed's patient engagement (portal, reminders, communication) improves retention 10-15%.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBTOTAL -->
+                <div class="subtotal-row">
+                    <div class="subtotal-grid">
+                        <div class="subtotal-label">TOTAL ANNUAL IMPACT</div>
+                        <div>
+                            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Current State Cost</div>
+                            <div class="subtotal-value red" id="subtotalCost">$0</div>
+                        </div>
+                        <div>
+                            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Annual Savings</div>
+                            <div class="subtotal-value blue" id="subtotalSave">$0</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -355,7 +632,7 @@
             <div class="step-header">
                 <div>
                     <div class="step-title"><span class="step-num">3</span>ModMed Investment</div>
-                    <div class="step-subtitle">Configure pricing based on your quote</div>
+                    <div class="step-subtitle">Configure pricing based on your specific quote</div>
                 </div>
                 <div class="step-total">
                     <div class="step-total-label">Year 1 Total</div>
@@ -364,7 +641,7 @@
             </div>
             <div class="step-body">
                 <div class="info-box">
-                    <strong>💡 Customize these values:</strong> Adjust based on your specific ModMed quote. All fields are editable.
+                    <strong>💡 Sandler Tip:</strong> Don't present pricing until you've established pain and quantified the cost. The investment should always be smaller than their annual loss!
                 </div>
                 
                 <div class="invest-card">
@@ -392,21 +669,21 @@
                     </div>
                 </div>
                 
-                <div style="margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center">
-                    <div style="padding:12px;background:#f8fafc;border-radius:8px">
-                        <div style="font-size:10px;color:var(--muted)">YEAR 1 COST</div>
-                        <div style="font-size:18px;font-weight:700;color:var(--purple)" id="invYear1">$0</div>
-                        <div style="font-size:9px;color:var(--text2)">(Monthly × 12) + Implementation</div>
+                <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+                    <div style="padding:16px;background:#f8fafc;border-radius:12px;text-align:center;border:2px solid var(--border)">
+                        <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">YEAR 1 COST</div>
+                        <div style="font-size:22px;font-weight:800;color:var(--purple)" id="invYear1">$0</div>
+                        <div style="font-size:10px;color:var(--text2);margin-top:4px">(Monthly × 12) + Implementation</div>
                     </div>
-                    <div style="padding:12px;background:#f8fafc;border-radius:8px">
-                        <div style="font-size:10px;color:var(--muted)">ONGOING ANNUAL</div>
-                        <div style="font-size:18px;font-weight:700;color:var(--purple)" id="invOngoing">$0</div>
-                        <div style="font-size:9px;color:var(--text2)">Monthly × 12 + Support</div>
+                    <div style="padding:16px;background:#f8fafc;border-radius:12px;text-align:center;border:2px solid var(--border)">
+                        <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">ONGOING ANNUAL</div>
+                        <div style="font-size:22px;font-weight:800;color:var(--purple)" id="invOngoing">$0</div>
+                        <div style="font-size:10px;color:var(--text2);margin-top:4px">Monthly × 12 + Support</div>
                     </div>
-                    <div style="padding:12px;background:#f8fafc;border-radius:8px">
-                        <div style="font-size:10px;color:var(--muted)">3-YEAR TOTAL</div>
-                        <div style="font-size:18px;font-weight:700;color:var(--purple)" id="inv3Year">$0</div>
-                        <div style="font-size:9px;color:var(--text2)">Year 1 + (Ongoing × 2)</div>
+                    <div style="padding:16px;background:#f8fafc;border-radius:12px;text-align:center;border:2px solid var(--border)">
+                        <div style="font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px">3-YEAR TOTAL</div>
+                        <div style="font-size:22px;font-weight:800;color:var(--purple)" id="inv3Year">$0</div>
+                        <div style="font-size:10px;color:var(--text2);margin-top:4px">Year 1 + (Ongoing × 2)</div>
                     </div>
                 </div>
             </div>
@@ -417,7 +694,7 @@
             <div class="step-header">
                 <div>
                     <div class="step-title"><span class="step-num">4</span>Return on Investment</div>
-                    <div class="step-subtitle">Your bottom line impact</div>
+                    <div class="step-subtitle">Your bottom-line impact — the numbers that matter</div>
                 </div>
             </div>
             <div class="step-body">
@@ -444,12 +721,12 @@
                     </div>
                 </div>
                 
-                <div style="margin-top:16px;padding:16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;text-align:center">
-                    <div style="font-size:12px;color:#166534;margin-bottom:8px">📊 Value Summary</div>
-                    <div style="font-size:14px;color:var(--text)">
-                        For every <strong style="color:var(--purple)" id="sumInvest">$1</strong> invested in Year 1, 
-                        you recover <strong style="color:var(--green)" id="sumReturn">$0</strong> in savings — 
-                        a <strong style="color:var(--blue)" id="sumRoi">0%</strong> return.
+                <div style="margin-top:20px;padding:20px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #bbf7d0;border-radius:14px;text-align:center;box-shadow:var(--shadow)">
+                    <div style="font-size:14px;color:#166534;margin-bottom:10px;font-weight:700">📊 Value Summary</div>
+                    <div style="font-size:15px;color:var(--text);line-height:1.8">
+                        For every <strong style="color:var(--purple);font-size:17px" id="sumInvest">$1</strong> invested in Year 1, 
+                        you recover <strong style="color:var(--green);font-size:17px" id="sumReturn">$0</strong> in savings — 
+                        a <strong style="color:var(--blue);font-size:17px" id="sumRoi">0%</strong> return.
                     </div>
                 </div>
             </div>
@@ -457,7 +734,7 @@
 
         <!-- TALK TRACK -->
         <div class="talk-section">
-            <div class="talk-title">🎯 Your Conversation Guide</div>
+            <div class="talk-title">🎯 Your Conversation Guide (Sandler 4-Step)</div>
             <div class="talk-item">
                 <div class="talk-label"><span class="talk-step">1</span>Discovery — Uncover the Pain</div>
                 <div class="talk-script">"Walk me through a typical day. Where do you feel like you're <strong>losing time or leaving money on the table</strong>?"</div>
@@ -475,10 +752,83 @@
                 <div class="talk-script">"For <strong id="scriptInv">$0</strong> in Year 1, you get <strong id="scriptSave2">$0</strong> back — a <strong id="scriptRoi">0%</strong> ROI with a <strong id="scriptPayback">--</strong>-month payback. Over 3 years, that's <strong id="scriptNet3">$0</strong> net benefit."</div>
             </div>
         </div>
+
+        <!-- DISCOVERY CHECKLIST -->
+        <div class="discovery-section">
+            <div class="discovery-header">
+                <div class="discovery-title">
+                    <span>📋</span>
+                    Your Discovery Question Bank
+                    <span>📋</span>
+                </div>
+                <div class="discovery-subtitle">Use this when you need to ensure you've covered all the bases</div>
+            </div>
+            
+            <div class="discovery-script">
+                <strong>💬 Transition Script:</strong> "Before we move forward, I like to run through a quick checklist to make sure I have a complete picture of your practice. I know we've covered some of this, but I want to ensure I'm not missing anything that could impact your results. Mind if I ask a few more questions?"
+            </div>
+            
+            <div class="discovery-grid">
+                <div class="discovery-category">
+                    <div class="discovery-category-title">🏥 Practice Operations</div>
+                    <div class="discovery-question">"How many providers are currently seeing patients?"</div>
+                    <div class="discovery-question">"What's your typical patient volume per provider per day?"</div>
+                    <div class="discovery-question">"How many support staff do you have per provider?"</div>
+                    <div class="discovery-question">"What's your average revenue per patient visit?"</div>
+                </div>
+                
+                <div class="discovery-category">
+                    <div class="discovery-category-title">⏰ Time & Efficiency</div>
+                    <div class="discovery-question">"How much time are providers spending on after-hours charting?"</div>
+                    <div class="discovery-question">"What's your biggest time-waster in a typical day?"</div>
+                    <div class="discovery-question">"How much time does staff spend on phone calls daily?"</div>
+                    <div class="discovery-question">"Are providers able to see as many patients as they'd like?"</div>
+                </div>
+                
+                <div class="discovery-category">
+                    <div class="discovery-category-title">💰 Revenue Cycle</div>
+                    <div class="discovery-question">"What's your current collection rate? Do you know what you're leaving on the table?"</div>
+                    <div class="discovery-question">"What percentage of claims get denied on first submission?"</div>
+                    <div class="discovery-question">"Are you confident you're capturing and billing for every service?"</div>
+                    <div class="discovery-question">"How long does it take to collect payment after a visit?"</div>
+                </div>
+                
+                <div class="discovery-category">
+                    <div class="discovery-category-title">📅 Patient Engagement</div>
+                    <div class="discovery-question">"What's your no-show rate? How are you handling reminders?"</div>
+                    <div class="discovery-question">"Do patients have online scheduling? Portal access? How many use it?"</div>
+                    <div class="discovery-question">"What percentage of patients return for ongoing care?"</div>
+                    <div class="discovery-question">"How would you rate your patient experience? Modern? Outdated?"</div>
+                </div>
+                
+                <div class="discovery-category">
+                    <div class="discovery-category-title">🔧 Current System Pain</div>
+                    <div class="discovery-question">"What's the #1 thing you'd change about your current EHR?"</div>
+                    <div class="discovery-question">"How often do providers complain about documentation burden?"</div>
+                    <div class="discovery-question">"Is your current system slowing you down or helping you grow?"</div>
+                    <div class="discovery-question">"What's your billing/PM situation? Integrated or separate?"</div>
+                </div>
+                
+                <div class="discovery-category">
+                    <div class="discovery-category-title">🎯 Goals & Decision Process</div>
+                    <div class="discovery-question">"If we could solve all these problems, what would success look like in 12 months?"</div>
+                    <div class="discovery-question">"What's driving this conversation right now? What changed?"</div>
+                    <div class="discovery-question">"Who else needs to be involved in this decision?"</div>
+                    <div class="discovery-question">"If the numbers make sense, is there any reason we wouldn't move forward?"</div>
+                </div>
+            </div>
+            
+            <div style="margin-top:20px;padding:16px;background:var(--gold);border-radius:12px;text-align:center;font-size:13px;font-weight:700;color:#000">
+                💡 Remember: Questions build trust. The more pain you uncover, the easier the close becomes!
+            </div>
+        </div>
     </main>
 
     <script>
-        const specs={plastic:{rpv:425,charting:1.5,noshow:18,denial:12,coll:89,capture:94,ret:72,phone:60},allergy:{rpv:195,charting:1.2,noshow:20,denial:14,coll:87,capture:92,ret:75,phone:80}};
+        const specs={
+            plastic:{rpv:425,charting:1.5,noshow:18,denial:12,coll:89,capture:94,ret:72,phone:60},
+            allergy:{rpv:195,charting:1.2,noshow:20,denial:14,coll:87,capture:92,ret:75,phone:80}
+        };
         let currentSpec='plastic';
         
         function fmt(n){return n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+Math.round(n/1e3)+'K':'$'+Math.round(n)}
@@ -498,6 +848,22 @@
             calc();
         }
         
+        function toggleHelp(id){
+            const panel=document.getElementById('help-'+id);
+            const btn=event.target;
+            const isActive=panel.classList.contains('active');
+            
+            // Close all panels
+            document.querySelectorAll('.help-panel').forEach(p=>p.classList.remove('active'));
+            document.querySelectorAll('.help-toggle').forEach(b=>b.classList.remove('active'));
+            
+            // Toggle current
+            if(!isActive){
+                panel.classList.add('active');
+                btn.classList.add('active');
+            }
+        }
+        
         function calc(){
             const prov=getN('providers',2),staff=getN('staff',6),ppd=getN('ppd',18),rpv=getN('rpv',425);
             const days=getN('workdays',240),staffRate=getN('staffrate',28),provRate=200;
@@ -515,7 +881,6 @@
             const chartSave=(chartCurr-chartTgt)*provRate*days*prov;
             document.getElementById('chartingCost').textContent=fmt(chartCost);
             document.getElementById('chartingSave').textContent=fmt(Math.max(0,chartSave));
-            document.getElementById('chartingFormula').textContent=`${chartCurr}hrs × $${provRate}/hr × ${days}days × ${prov}prov = ${fmt(chartCost)}`;
             totalCost+=chartCost;totalSave+=Math.max(0,chartSave);
             
             // NO-SHOWS
@@ -524,7 +889,6 @@
             const nsSave=visits*(nsCurr-nsTgt)*rpv;
             document.getElementById('noshowCost').textContent=fmt(nsCost);
             document.getElementById('noshowSave').textContent=fmt(Math.max(0,nsSave));
-            document.getElementById('noshowFormula').textContent=`${visits.toLocaleString()} visits × ${Math.round(nsCurr*100)}% × $${rpv} = ${fmt(nsCost)}`;
             totalCost+=nsCost;totalSave+=Math.max(0,nsSave);
             
             // COLLECTIONS
@@ -533,7 +897,6 @@
             const collSave=revenue*(collTgt-collCurr);
             document.getElementById('collCost').textContent=fmt(collCost);
             document.getElementById('collSave').textContent=fmt(Math.max(0,collSave));
-            document.getElementById('collFormula').textContent=`${fmt(revenue)} × (100% - ${Math.round(collCurr*100)}%) = ${fmt(collCost)} lost`;
             totalCost+=collCost;totalSave+=Math.max(0,collSave);
             
             // DENIALS
@@ -542,7 +905,6 @@
             const denSave=visits*(denCurr-denTgt)*denCostPer;
             document.getElementById('denialCost').textContent=fmt(denCost);
             document.getElementById('denialSave').textContent=fmt(Math.max(0,denSave));
-            document.getElementById('denialFormula').textContent=`${visits.toLocaleString()} × ${Math.round(denCurr*100)}% × $${denCostPer}/denial = ${fmt(denCost)}`;
             totalCost+=denCost;totalSave+=Math.max(0,denSave);
             
             // CAPTURE
@@ -551,7 +913,6 @@
             const capSave=revenue*(capTgt-capCurr);
             document.getElementById('captureCost').textContent=fmt(capCost);
             document.getElementById('captureSave').textContent=fmt(Math.max(0,capSave));
-            document.getElementById('captureFormula').textContent=`${fmt(revenue)} × (100% - ${Math.round(capCurr*100)}%) = ${fmt(capCost)} missed`;
             totalCost+=capCost;totalSave+=Math.max(0,capSave);
             
             // PHONE
@@ -560,7 +921,6 @@
             const phoneSave=((phoneCurr-phoneTgt)*phoneMin/60)*staffRate*days;
             document.getElementById('phoneCost').textContent=fmt(phoneCost);
             document.getElementById('phoneSave').textContent=fmt(Math.max(0,phoneSave));
-            document.getElementById('phoneFormula').textContent=`${phoneCurr} × ${phoneMin}min × $${staffRate}/hr × ${days}days = ${fmt(phoneCost)}`;
             totalCost+=phoneCost;totalSave+=Math.max(0,phoneSave);
             
             // RETENTION
@@ -569,7 +929,6 @@
             const retSave=patients*(retTgt-retCurr)*retVal;
             document.getElementById('retCost').textContent=fmt(retCost);
             document.getElementById('retSave').textContent=fmt(Math.max(0,retSave));
-            document.getElementById('retFormula').textContent=`${patients.toLocaleString()}pts × ${Math.round((1-retCurr)*100)}% lost × $${retVal}/pt = ${fmt(retCost)}`;
             totalCost+=retCost;totalSave+=Math.max(0,retSave);
             
             // SUBTOTALS
@@ -622,7 +981,15 @@
             window.data={prov,staff,totalCost,totalSave,year1,ongoing,net1,net3,roi,payback};
         }
         
-        function resetAll(){setSpec('plastic');setN('providers',2);setN('staff',6);setN('ppd',18);calc();}
+        function resetAll(){
+            setSpec('plastic');
+            setN('providers',2);
+            setN('staff',6);
+            setN('ppd',18);
+            setN('workdays',240);
+            setN('staffrate',28);
+            calc();
+        }
         
         function copySummary(){
             const d=window.data;
@@ -646,8 +1013,9 @@ Net benefit: ${fmt(d.net3)}
 ════════════════════════════════`;
             navigator.clipboard.writeText(t).then(()=>{
                 const b=document.querySelector('.btn-gold');
+                const orig=b.textContent;
                 b.textContent='✓ Copied!';
-                setTimeout(()=>b.textContent='📋 Copy Summary',2000);
+                setTimeout(()=>b.textContent=orig,2000);
             });
         }
         
